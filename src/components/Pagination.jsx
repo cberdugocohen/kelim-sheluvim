@@ -25,13 +25,14 @@ export default function Pagination({ currentPage, totalPages, onPageChange, clas
   }
 
   return (
-    <div className={`flex items-center justify-center gap-1 sm:gap-2 ${className}`} dir="ltr">
+    <nav aria-label="ניווט בין עמודים" className={`flex items-center justify-center gap-1 sm:gap-2 ${className}`} dir="ltr">
       <Button
         variant="outline"
         size="icon"
         className="h-9 w-9"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
+        aria-label="עמוד קודם"
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
@@ -43,10 +44,12 @@ export default function Pagination({ currentPage, totalPages, onPageChange, clas
             size="sm"
             className="h-9 min-w-[36px]"
             onClick={() => onPageChange(1)}
+            aria-label="עמוד 1"
+            aria-current={currentPage === 1 ? 'page' : undefined}
           >
             1
           </Button>
-          {startPage > 2 && <span className="text-slate-400 px-1">...</span>}
+          {startPage > 2 && <span className="text-slate-400 px-1" aria-hidden="true">...</span>}
         </>
       )}
 
@@ -57,6 +60,8 @@ export default function Pagination({ currentPage, totalPages, onPageChange, clas
           size="sm"
           className={`h-9 min-w-[36px] ${page === currentPage ? "bg-purple-600 hover:bg-purple-700 text-white" : ""}`}
           onClick={() => onPageChange(page)}
+          aria-label={`עמוד ${page}`}
+          aria-current={page === currentPage ? 'page' : undefined}
         >
           {page}
         </Button>
@@ -64,12 +69,14 @@ export default function Pagination({ currentPage, totalPages, onPageChange, clas
 
       {endPage < totalPages && (
         <>
-          {endPage < totalPages - 1 && <span className="text-slate-400 px-1">...</span>}
+          {endPage < totalPages - 1 && <span className="text-slate-400 px-1" aria-hidden="true">...</span>}
           <Button
             variant={currentPage === totalPages ? "default" : "outline"}
             size="sm"
             className="h-9 min-w-[36px]"
             onClick={() => onPageChange(totalPages)}
+            aria-label={`עמוד ${totalPages}`}
+            aria-current={currentPage === totalPages ? 'page' : undefined}
           >
             {totalPages}
           </Button>
@@ -82,10 +89,11 @@ export default function Pagination({ currentPage, totalPages, onPageChange, clas
         className="h-9 w-9"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
+        aria-label="עמוד הבא"
       >
         <ChevronRight className="h-4 w-4" />
       </Button>
-    </div>
+    </nav>
   );
 }
 

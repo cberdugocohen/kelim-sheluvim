@@ -22,6 +22,7 @@ import ServiceModal from "../components/ServiceModal";
 import ContactModal from "@/components/ContactModal"; // Added ContactModal import
 import ServiceCardSkeleton from "../components/skeletons/ServiceCardSkeleton";
 import Pagination, { usePagination } from "../components/Pagination";
+import EmptyState from "../components/EmptyState";
 
 function PaginatedServiceGrid({ filteredServices, isLoading, handleServiceClick, categoryColors, perPage }) {
   const { page, setPage, pageItems, totalPages } = usePagination(filteredServices, perPage);
@@ -41,7 +42,7 @@ function PaginatedServiceGrid({ filteredServices, isLoading, handleServiceClick,
     );
   }
 
-  if (filteredServices.length === 0) return null;
+  if (filteredServices.length === 0) return <EmptyState type="search" />;
 
   return (
     <>

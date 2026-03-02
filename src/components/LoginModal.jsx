@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { User } from '@/entities/User';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +14,7 @@ import { Mail, Loader2, ArrowRight, CheckCircle, Eye, EyeOff, UserPlus } from 'l
 import toast from 'react-hot-toast';
 
 export default function LoginModal({ isOpen, onClose }) {
+  const queryClient = useQueryClient();
   const [mode, setMode] = useState('choose'); // choose | login | register | forgot
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,7 +41,7 @@ export default function LoginModal({ isOpen, onClose }) {
       await User.loginWithEmail(email, password);
       toast.success('התחברת בהצלחה! 🎉');
       onClose();
-      window.location.reload();
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
     } catch (error) {
       console.error('Email login failed:', error);
       if (error.message?.includes('Invalid login credentials')) {
@@ -206,6 +208,10 @@ export default function LoginModal({ isOpen, onClose }) {
                     className="h-12"
                     dir="ltr"
                     autoFocus
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck="false"
+                    inputMode="email"
                   />
                 </div>
                 <div>
@@ -275,6 +281,10 @@ export default function LoginModal({ isOpen, onClose }) {
                   className="h-12"
                   dir="ltr"
                   autoFocus
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck="false"
+                  inputMode="email"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !isLoading) handleResetPassword();
                   }}
@@ -324,6 +334,10 @@ export default function LoginModal({ isOpen, onClose }) {
                     onChange={(e) => setEmail(e.target.value)}
                     className="h-12"
                     dir="ltr"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck="false"
+                    inputMode="email"
                   />
                 </div>
                 <div>

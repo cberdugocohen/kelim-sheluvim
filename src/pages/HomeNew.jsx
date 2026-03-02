@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Service } from "@/entities/Service";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -62,7 +63,10 @@ export default function HomeNew() {
   };
 
   const handleSearch = (query = searchQuery) => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      toast('הזיני מילת חיפוש', { icon: '🔍' });
+      return;
+    }
     navigate({
       pathname: createPageUrl('Services'),
       search: `?search=${encodeURIComponent(query)}`

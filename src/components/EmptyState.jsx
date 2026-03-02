@@ -18,12 +18,14 @@ export default function EmptyState({ type = 'default', title, subtitle, action }
 
   return (
     <motion.div
+      role="status"
+      aria-live="polite"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center justify-center py-16 px-4 text-center"
     >
       <div className="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center mb-6">
-        <span className="text-4xl">{config.emoji}</span>
+        <span className="text-4xl" aria-hidden="true">{config.emoji}</span>
       </div>
       <h3 className="text-xl font-bold text-slate-700 mb-2">
         {title || config.text}
