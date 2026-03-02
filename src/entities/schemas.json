@@ -1,0 +1,132 @@
+{
+  "PrayerRequest": {
+    "name": "PrayerRequest",
+    "type": "object",
+    "properties": {
+      "name_for_prayer": { "type": "string", "maxLength": 100, "description": "שם לתפילה (כולל שם האם אם רלוונטי)" },
+      "request_types": { "type": "array", "items": { "type": "string", "enum": ["רפואת הגוף והנפש", "זיווג הגון משורש השנה", "חופה וקידושין עוד השנה", "שלום בית", "פרנסה", "הריון / לידה", "שמירה / ילדים", "הצלחה / לימודים", "אחר"] }, "description": "סוגי הבקשות (ניתן לבחור מספר)" },
+      "valid_for": { "type": "string", "enum": ["שבוע", "40 ימים"], "description": "תקופת תוקף הבקשה" },
+      "valid_until": { "type": "string", "format": "date", "description": "תאריך סיום תוקף (מחושב אוטומטית)" },
+      "context_note": { "type": "string", "maxLength": 300, "description": "כמה מילים עם הקשר או פרטים נוספים" },
+      "status": { "type": "string", "enum": ["פעיל", "לא פעיל"], "default": "פעיל", "description": "סטטוס הבקשה" },
+      "requester_id": { "type": "string", "description": "מזהה המשתמשת שהוסיפה את הבקשה" },
+      "requester_name": { "type": "string", "description": "שם המשתמשת שהוסיפה (משוכפל להצגה)" },
+      "prayers_from": { "type": "array", "items": { "type": "string" }, "default": [], "description": "רשימת מזהי משתמשות שהתפללו על הבקשה" }
+    },
+    "required": ["name_for_prayer", "request_types", "valid_for"]
+  },
+  "PrivateMessage": {
+    "name": "PrivateMessage",
+    "type": "object",
+    "properties": {
+      "sender_id": { "type": "string", "description": "מזהה השולחת" },
+      "recipient_id": { "type": "string", "description": "מזהה המקבלת" },
+      "subject": { "type": "string", "description": "נושא ההודעה" },
+      "content": { "type": "string", "maxLength": 500, "description": "תוכן ההודעה" },
+      "is_read": { "type": "boolean", "default": false, "description": "האם ההודעה נקראה" },
+      "related_post_id": { "type": "string", "description": "קישור לפוסט שהוביל להודעה" }
+    },
+    "required": ["sender_id", "recipient_id", "subject", "content"]
+  },
+  "ProfileApproval": {
+    "name": "ProfileApproval",
+    "type": "object",
+    "properties": {
+      "user_id": { "type": "string", "description": "מזהה המשתמשת שביקשה את השינוי" },
+      "student_profile_id": { "type": "string", "description": "מזהה הפרופיל הסטודנט (אם קיים)" },
+      "type": { "type": "string", "enum": ["new_profile", "profile_update"], "description": "סוג הבקשה" },
+      "proposed_data": { "type": "object", "description": "הנתונים המוצעים לשינוי" },
+      "current_data": { "type": "object", "description": "הנתונים הנוכחיים (עבור עדכונים)" },
+      "changes_summary": { "type": "string", "description": "סיכום השינויים שנעשו" },
+      "status": { "type": "string", "enum": ["pending", "approved", "rejected", "needs_changes"], "default": "pending" },
+      "admin_feedback": { "type": "string", "description": "הערות מהמנהלת" },
+      "reviewed_by": { "type": "string", "description": "מזהה המנהלת שבדקה" },
+      "reviewed_at": { "type": "string", "format": "date-time", "description": "תאריך בדיקה" }
+    },
+    "required": ["user_id", "type", "proposed_data"]
+  },
+  "Recommendation": {
+    "name": "Recommendation",
+    "type": "object",
+    "properties": {
+      "service_id": { "type": "string", "description": "מזהה השירות" },
+      "content": { "type": "string", "maxLength": 150, "description": "תוכן ההמלצה" },
+      "recommender_id": { "type": "string", "description": "מזהה הממליץ" }
+    },
+    "required": ["service_id", "content", "recommender_id"]
+  },
+  "Service": {
+    "name": "Service",
+    "type": "object",
+    "properties": {
+      "title": { "type": "string", "description": "שם השירות" },
+      "description": { "type": "string", "description": "תיאור השירות" },
+      "category": { "type": "string", "enum": ["טיפוח ובריאות", "שירותי בית", "אומנות ויצירה", "חינוך והוראה", "טיפול וייעוץ", "טיפול זוגי", "ייעוץ כלכלי", "וידאו", "בגדים ותכשיטים", "עיסוי", "מוצרי נוי", "כושר", "אחר"] },
+      "geographic_area": { "type": "string", "description": "אזור השירות" },
+      "price": { "type": "string", "description": "מחיר השירות" },
+      "images": { "type": "array", "items": { "type": "string" }, "minItems": 1, "maxItems": 3 },
+      "video_url": { "type": "string", "description": "קישור לסרטון השירות" },
+      "is_approved": { "type": "boolean", "default": false },
+      "provider_id": { "type": "string" },
+      "provider_name": { "type": "string" },
+      "provider_image": { "type": "string" },
+      "is_holiday_highlight": { "type": "boolean", "default": false },
+      "holiday_type": { "type": "string", "enum": ["ראש השנה", "יום כיפור", "סוכות", "חנוכה", "ט\"ו בשבט", "פורים", "פסח", "יום העצמאות", "ל\"ג בעומר", "שבועות", "שלושת השבועות", "תשעה באב", "כללי"] }
+    },
+    "required": ["title", "description", "category", "geographic_area", "images", "provider_id"]
+  },
+  "ServiceCategory": {
+    "name": "ServiceCategory",
+    "type": "object",
+    "properties": {
+      "main_category": { "type": "string" },
+      "sub_category": { "type": "string" },
+      "is_active": { "type": "boolean", "default": true },
+      "display_order": { "type": "number" }
+    },
+    "required": ["main_category", "sub_category"]
+  },
+  "SpotlightRequest": {
+    "name": "SpotlightRequest",
+    "type": "object",
+    "properties": {
+      "user_id": { "type": "string" },
+      "personal_story": { "type": "string", "maxLength": 800 },
+      "business_description": { "type": "string", "maxLength": 600 },
+      "what_i_offer": { "type": "string", "maxLength": 400 },
+      "tagline": { "type": "string", "maxLength": 50 },
+      "images": { "type": "array", "items": { "type": "string" }, "maxItems": 5 },
+      "video_url": { "type": "string" },
+      "contact_preference": { "type": "string" },
+      "status": { "type": "string", "enum": ["pending", "selected", "archived", "needs_updates"], "default": "pending" },
+      "selected_week": { "type": "string", "format": "date" },
+      "admin_feedback": { "type": "string" }
+    },
+    "required": ["user_id"]
+  },
+  "Student": {
+    "name": "Student",
+    "type": "object",
+    "properties": {
+      "user_id": { "type": "string" },
+      "full_name": { "type": "string" },
+      "profile_image": { "type": "string" },
+      "username": { "type": "string" },
+      "city": { "type": "string" },
+      "description": { "type": "string", "maxLength": 300 },
+      "additional_images": { "type": "array", "items": { "type": "string" }, "maxItems": 8 },
+      "weekly_video_url": { "type": "string" },
+      "coordinates": { "type": "object", "properties": { "lat": { "type": "number" }, "lng": { "type": "number" } } },
+      "contact_info": { "type": "object", "properties": { "phone": { "type": "string" }, "email": { "type": "string" }, "website": { "type": "string" }, "instagram": { "type": "string" }, "other": { "type": "string" } } },
+      "contribution_details": { "type": "object", "properties": { "gift": { "type": "object" }, "paid": { "type": "object" }, "barter": { "type": "object" } } },
+      "services": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "string" }, "title": { "type": "string" }, "description": { "type": "string", "maxLength": 300 }, "type": { "type": "string", "enum": ["gift", "paid", "barter"] }, "price_range": { "type": "string" }, "images": { "type": "array" }, "category": { "type": "string" }, "is_active": { "type": "boolean", "default": true } } }, "default": [] },
+      "service_areas": { "type": "array", "items": { "type": "string" } },
+      "category_main": { "type": "string" },
+      "category_sub": { "type": "string" },
+      "is_holiday_highlight": { "type": "boolean", "default": false },
+      "holiday_type": { "type": "string" },
+      "tags": { "type": "array", "items": { "type": "string" }, "default": [] }
+    },
+    "required": ["user_id"]
+  }
+}
