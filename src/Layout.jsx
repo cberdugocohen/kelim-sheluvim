@@ -29,6 +29,7 @@ import {
   LogIn,
   Shield,
   Heart,
+  Gift,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CollapsibleDisclaimer from "./components/CollapsibleDisclaimer";
@@ -46,6 +47,7 @@ const navigationItems = [
   { title: "מרכז הקהילה", url: createPageUrl("CommunityCenter"), icon: MessageSquare },
   { title: "קיר בקשות תפילה", url: createPageUrl("PrayerRequests"), icon: Heart },
   { title: "לוח אירועים", url: createPageUrl("Events"), icon: Calendar },
+  { title: "מתנות לפסח 🌸", url: createPageUrl("PesachGifts"), icon: Gift },
   { title: "מרכז התראות", url: createPageUrl("MyMessages"), icon: Bell, requiresAuth: true },
   { title: "הפרופיל שלי", url: createPageUrl("Profile"), icon: User, requiresAuth: true },
   { title: "ניהול מערכת", url: createPageUrl("Admin"), icon: Shield, adminOnly: true },

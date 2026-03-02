@@ -2,14 +2,14 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { createPageUrl } from '@/utils';
-import { Home, Users, MessageSquare, Heart, User, Shield } from 'lucide-react';
+import { Home, Users, MessageSquare, Gift, User, Shield } from 'lucide-react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 const baseNavItems = [
   { title: 'בית', url: createPageUrl('Home'), icon: Home },
   { title: 'שירותים', url: createPageUrl('CommunityHub'), icon: Users },
   { title: 'קהילה', url: createPageUrl('CommunityCenter'), icon: MessageSquare },
-  { title: 'תפילה', url: createPageUrl('PrayerRequests'), icon: Heart },
+  { title: 'מתנות', url: createPageUrl('PesachGifts'), icon: Gift },
   { title: 'פרופיל', url: createPageUrl('Profile'), icon: User },
 ];
 

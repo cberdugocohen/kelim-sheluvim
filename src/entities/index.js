@@ -16,3 +16,4 @@ export { CategoryRequest } from './CategoryRequest';
 export { HolidaySection } from './HolidaySection';
 export { ServiceCategory } from './ServiceCategory';
 export { AppStats } from './AppStats';
+export { PesachGift } from './PesachGift';

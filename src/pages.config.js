@@ -5,6 +5,7 @@ import Events from './pages/Events';
 import Home from './pages/HomeNew';
 import MyMessages from './pages/MyMessages';
 import Notifications from './pages/Notifications';
+import PesachGifts from './pages/PesachGifts';
 import PrayerRequests from './pages/PrayerRequests';
 import Profile from './pages/Profile';
 import Services from './pages/Services';
@@ -22,6 +23,7 @@ export const PAGES = {
     "Home": Home,
     "MyMessages": MyMessages,
     "Notifications": Notifications,
+    "PesachGifts": PesachGifts,
     "PrayerRequests": PrayerRequests,
     "Profile": Profile,
     "Services": Services,
