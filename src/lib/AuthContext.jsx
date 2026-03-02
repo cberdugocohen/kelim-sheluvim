@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/api/supabase';
+import { User } from '@/entities/User';
 
 const AuthContext = createContext({});
 
@@ -36,17 +37,10 @@ export function AuthProvider({ children }) {
   const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
-    // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session);
-      if (session?.user) ensureUserProfile(session.user);
-      setIsLoadingAuth(false);
-    });
-
-    // Listen for auth changes
+    // onAuthStateChange fires INITIAL_SESSION on mount — no need for a separate getSession() call.
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
-      if (session?.user && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+      if (session?.user && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION')) {
         ensureUserProfile(session.user);
       }
       setIsLoadingAuth(false);
@@ -57,10 +51,7 @@ export function AuthProvider({ children }) {
 
   const navigateToLogin = async () => {
     try {
-      await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.origin }
-      });
+      await User.login();
     } catch (error) {
       console.error('Login failed:', error);
     }
@@ -69,7 +60,6 @@ export function AuthProvider({ children }) {
   return (
     <AuthContext.Provider value={{
       isLoadingAuth,
-      isLoadingPublicSettings: false,
       authError,
       isAuthenticated,
       navigateToLogin

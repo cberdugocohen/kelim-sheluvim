@@ -20,10 +20,15 @@ export async function apiCallWithRetry(apiCall, maxRetriesOrOpts = 3, baseDelay 
   for (let attempt = 1; attempt <= totalAttempts; attempt++) {
     try {
       if (useTimeout) {
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Request timeout')), timeout)
-        );
-        return await Promise.race([apiCall(), timeoutPromise]);
+        let timerId;
+        const timeoutPromise = new Promise((_, reject) => {
+          timerId = setTimeout(() => reject(new Error('Request timeout')), timeout);
+        });
+        try {
+          return await Promise.race([apiCall(), timeoutPromise]);
+        } finally {
+          clearTimeout(timerId);
+        }
       }
       return await apiCall();
     } catch (error) {
@@ -43,9 +48,9 @@ export async function apiCallWithRetry(apiCall, maxRetriesOrOpts = 3, baseDelay 
         const delay = Math.min(baseDelay * Math.pow(2, attempt - 1) + jitter, maxDelay);
         console.warn(`Retrying in ${Math.round(delay)}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
-        continue;
+      } else {
+        throw error;
       }
-      throw error;
     }
   }
 }

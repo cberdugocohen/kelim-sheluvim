@@ -10,6 +10,24 @@ import { supabase } from './supabase';
  *   - Entity.list(orderBy, limit)
  *   - Entity.filter(filters, orderBy, limit)
  */
+
+/**
+ * Apply ordering to a Supabase query.
+ * orderBy format: "-field" for desc, "field" for asc (matches Base44 convention)
+ * defaultField: fallback sort column when no orderBy is given (null = no default)
+ */
+export function applyOrder(query, orderBy, defaultField = 'created_date') {
+  if (orderBy) {
+    const desc = orderBy.startsWith('-');
+    const field = desc ? orderBy.slice(1) : orderBy;
+    return query.order(field, { ascending: !desc });
+  }
+  if (defaultField) {
+    return query.order(defaultField, { ascending: false });
+  }
+  return query;
+}
+
 export function createEntity(tableName) {
   return {
     /**
@@ -70,18 +88,8 @@ export function createEntity(tableName) {
      */
     async list(orderBy, limit) {
       let query = supabase.from(tableName).select('*');
-
-      if (orderBy) {
-        const desc = orderBy.startsWith('-');
-        const field = desc ? orderBy.slice(1) : orderBy;
-        query = query.order(field, { ascending: !desc });
-      } else {
-        query = query.order('created_date', { ascending: false });
-      }
-
-      if (limit) {
-        query = query.limit(limit);
-      }
+      query = applyOrder(query, orderBy);
+      if (limit) query = query.limit(limit);
 
       const { data, error } = await query;
       if (error) throw new Error(`Error listing ${tableName}: ${error.message}`);
@@ -99,25 +107,14 @@ export function createEntity(tableName) {
 
       if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
-          if (value === true || value === false) {
-            query = query.eq(key, value);
-          } else if (value !== undefined && value !== null) {
+          if (value !== undefined && value !== null) {
             query = query.eq(key, value);
           }
         });
       }
 
-      if (orderBy) {
-        const desc = orderBy.startsWith('-');
-        const field = desc ? orderBy.slice(1) : orderBy;
-        query = query.order(field, { ascending: !desc });
-      } else {
-        query = query.order('created_date', { ascending: false });
-      }
-
-      if (limit) {
-        query = query.limit(limit);
-      }
+      query = applyOrder(query, orderBy);
+      if (limit) query = query.limit(limit);
 
       const { data, error } = await query;
       if (error) throw new Error(`Error filtering ${tableName}: ${error.message}`);
@@ -133,12 +130,7 @@ export function createEntity(tableName) {
       if (!values || values.length === 0) return [];
 
       let query = supabase.from(tableName).select('*').in(field, values);
-
-      if (orderBy) {
-        const desc = orderBy.startsWith('-');
-        const f = desc ? orderBy.slice(1) : orderBy;
-        query = query.order(f, { ascending: !desc });
-      }
+      query = applyOrder(query, orderBy, null);
 
       const { data, error } = await query;
       if (error) throw new Error(`Error filter_in ${tableName}: ${error.message}`);

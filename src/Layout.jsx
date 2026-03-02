@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { useCurrentUser, clearUserCache } from "@/hooks/useCurrentUser";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import ErrorBoundary from "./components/ErrorBoundary";
 import {
   Sidebar,
@@ -46,8 +46,8 @@ const navigationItems = [
   { title: "מרכז הקהילה", url: createPageUrl("CommunityCenter"), icon: MessageSquare },
   { title: "קיר בקשות תפילה", url: createPageUrl("PrayerRequests"), icon: Heart },
   { title: "לוח אירועים", url: createPageUrl("Events"), icon: Calendar },
-  { title: "מרכז התראות", url: createPageUrl("MyMessages"), icon: Bell },
-  { title: "הפרופיל שלי", url: createPageUrl("Profile"), icon: User },
+  { title: "מרכז התראות", url: createPageUrl("MyMessages"), icon: Bell, requiresAuth: true },
+  { title: "הפרופיל שלי", url: createPageUrl("Profile"), icon: User, requiresAuth: true },
   { title: "ניהול מערכת", url: createPageUrl("Admin"), icon: Shield, adminOnly: true },
 ];
 
@@ -59,7 +59,9 @@ export default function Layout({ children, currentPageName }) {
 
   useEffect(() => {
     document.title = "כְּלִים שְׁלוּבִים";
+  }, []);
 
+  useEffect(() => {
     // Re-check authentication when the user returns to the app
     const handleRefresh = () => refresh();
     window.addEventListener('focus', handleRefresh);
@@ -73,7 +75,6 @@ export default function Layout({ children, currentPageName }) {
 
   const handleLogout = async () => {
     await logout();
-    clearUserCache();
     window.location.reload();
   };
 
@@ -130,9 +131,7 @@ export default function Layout({ children, currentPageName }) {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {navigationItems.map((item) => {
-                    // Check if item requires login
-                    const isProtected = ["הפרופיל שלי", "מרכז התראות"].includes(item.title);
-                    if (isProtected && !currentUser && !isLoading) {
+                    if (item.requiresAuth && !currentUser && !isLoading) {
                       return null; // Don't show protected routes if not logged in
                     }
                     

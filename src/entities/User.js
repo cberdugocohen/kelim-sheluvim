@@ -1,4 +1,5 @@
 import { supabase } from '@/api/supabase';
+import { applyOrder } from '@/api/entity';
 
 /**
  * User entity — wraps Supabase Auth + profiles table.
@@ -20,15 +21,15 @@ export const User = {
       .single();
 
     const avatarUrl = profile?.avatar_url || user.user_metadata?.avatar_url || '';
+    // Spread profile first so explicit fields below take precedence over raw DB values.
     return {
+      ...profile,
       id: profile?.id || user.id,
       auth_id: user.id,
       email: user.email,
       full_name: profile?.full_name || user.user_metadata?.full_name || '',
       role: profile?.role || 'user',
       avatar_url: avatarUrl,
-      profile_image: avatarUrl,
-      ...profile
     };
   },
 
@@ -96,12 +97,7 @@ export const User = {
    */
   async list(orderBy) {
     let query = supabase.from('users').select('*');
-    
-    if (orderBy) {
-      const desc = orderBy.startsWith('-');
-      const field = desc ? orderBy.slice(1) : orderBy;
-      query = query.order(field, { ascending: !desc });
-    }
+    query = applyOrder(query, orderBy, null);
 
     const { data, error } = await query;
     if (error) throw new Error(`Error listing users: ${error.message}`);
@@ -122,12 +118,7 @@ export const User = {
       });
     }
 
-    if (orderBy) {
-      const desc = orderBy.startsWith('-');
-      const field = desc ? orderBy.slice(1) : orderBy;
-      query = query.order(field, { ascending: !desc });
-    }
-
+    query = applyOrder(query, orderBy, null);
     if (limit) query = query.limit(limit);
 
     const { data, error } = await query;

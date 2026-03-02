@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { User } from '@/entities/User';
+import { queryClientInstance } from '@/lib/query-client';
 
 const USER_QUERY_KEY = ['currentUser'];
 
@@ -41,13 +42,10 @@ export function useCurrentUser() {
 }
 
 /**
- * Clear the cached user (e.g. on logout from Layout).
- * For use outside of React components — imports queryClientInstance directly.
+ * Clear the cached user synchronously (e.g. immediately before page reload on logout).
+ * For use outside of React components.
  */
 export function clearUserCache() {
-  // Lazy import to avoid circular dependency
-  import('@/lib/query-client').then(({ queryClientInstance }) => {
-    queryClientInstance.setQueryData(USER_QUERY_KEY, null);
-    queryClientInstance.removeQueries({ queryKey: USER_QUERY_KEY });
-  });
+  queryClientInstance.setQueryData(USER_QUERY_KEY, null);
+  queryClientInstance.removeQueries({ queryKey: USER_QUERY_KEY });
 }
