@@ -219,10 +219,10 @@ export default function Services() {
     if (searchTerm) {
       const lowercasedTerm = searchTerm.toLowerCase();
       filtered = filtered.filter(service =>
-        service.title.toLowerCase().includes(lowercasedTerm) ||
-        service.description.toLowerCase().includes(lowercasedTerm) ||
-        (service.service_areas || []).some(area => area.toLowerCase().includes(lowercasedTerm)) ||
-        (service.student_data?.tags || []).some(tag => tag.toLowerCase().includes(lowercasedTerm))
+        (service.title || '').toLowerCase().includes(lowercasedTerm) ||
+        (service.description || '').toLowerCase().includes(lowercasedTerm) ||
+        (service.service_areas || []).some(area => (area || '').toLowerCase().includes(lowercasedTerm)) ||
+        (service.student_data?.tags || []).some(tag => (tag || '').toLowerCase().includes(lowercasedTerm))
       );
     }
 

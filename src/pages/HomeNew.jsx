@@ -47,12 +47,12 @@ export default function HomeNew() {
   const loadData = async () => {
     try {
       const services = await Service.list();
-      const approved = services.filter(s => s.approval_status === 'approved');
+      const approved = services.filter(s => s.is_approved === true);
       
       setRecentServices(approved.slice(0, 6));
       setStats({
         services: approved.length,
-        providers: new Set(approved.map(s => s.user_id)).size
+        providers: new Set(approved.map(s => s.provider_id)).size
       });
     } catch (error) {
       console.error('Error loading services:', error);
