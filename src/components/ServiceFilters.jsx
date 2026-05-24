@@ -60,16 +60,36 @@ const getRegionForCity = (city) => {
 
 export { getRegionForCity };
 
-export default function ServiceFilters({ filters, setFilters, categories = [] }) {
-  const handleFilterChange = (filterName, value) => {
-    setFilters(prev => ({ ...prev, [filterName]: value }));
+export default function ServiceFilters({
+  filters, setFilters, categories = [],
+  searchTerm, onSearchChange,
+  selectedCategory, onCategoryChange,
+  selectedArea, onAreaChange
+}) {
+  // Support both prop interfaces:
+  // 1. { filters, setFilters, categories } (object-based)
+  // 2. { searchTerm, onSearchChange, selectedCategory, onCategoryChange, selectedArea, onAreaChange } (individual props)
+  const currentCategory = filters?.category ?? selectedCategory ?? 'all';
+  const currentRegion = filters?.region ?? selectedArea ?? 'all';
+
+  const handleCategoryChange = (value) => {
+    if (setFilters) setFilters(prev => ({ ...prev, category: value }));
+    if (onCategoryChange) onCategoryChange(value);
+  };
+
+  const handleRegionChange = (value) => {
+    if (setFilters) setFilters(prev => ({ ...prev, region: value }));
+    if (onAreaChange) onAreaChange(value);
   };
 
   const clearFilters = () => {
-    setFilters({ category: 'all', region: 'all' });
+    if (setFilters) setFilters({ category: 'all', region: 'all' });
+    if (onCategoryChange) onCategoryChange('all');
+    if (onAreaChange) onAreaChange('all');
+    if (onSearchChange) onSearchChange('');
   };
   
-  const hasActiveFilters = filters.category !== 'all' || filters.region !== 'all';
+  const hasActiveFilters = currentCategory !== 'all' || currentRegion !== 'all' || (searchTerm && searchTerm.length > 0);
 
   return (
     <Card className="bg-white/70 backdrop-blur-sm shadow-md border-purple-100 mb-8">
@@ -82,7 +102,7 @@ export default function ServiceFilters({ filters, setFilters, categories = [] })
           {hasActiveFilters && (
             <Button variant="ghost" size="sm" onClick={clearFilters} className="text-sm">
               <X className="w-4 h-4 ml-1" />
-              נקה סינונים
+              נקי סינונים
             </Button>
           )}
         </CardTitle>
@@ -90,7 +110,7 @@ export default function ServiceFilters({ filters, setFilters, categories = [] })
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium text-slate-600 mb-2 block">אזור גיאוגרפי</label>
-          <Select value={filters.region} onValueChange={(value) => handleFilterChange('region', value)}>
+          <Select value={currentRegion} onValueChange={handleRegionChange}>
             <SelectTrigger>
               <SelectValue placeholder="בחרי אזור" />
             </SelectTrigger>
@@ -103,7 +123,7 @@ export default function ServiceFilters({ filters, setFilters, categories = [] })
         </div>
         <div>
           <label className="text-sm font-medium text-slate-600 mb-2 block">קטגוריה</label>
-          <Select value={filters.category} onValueChange={(value) => handleFilterChange('category', value)}>
+          <Select value={currentCategory} onValueChange={handleCategoryChange}>
             <SelectTrigger>
               <SelectValue placeholder="בחרי קטגוריה" />
             </SelectTrigger>
