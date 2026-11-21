@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>כלים שלובים - יוזמה פרטית של תלמידות הרב</title>
-  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -414,6 +414,56 @@
       .sub-filters { margin: 4px 0 8px; }
       .search-hint { margin-top: 4px; min-height: 0; }
     }
+    /* ---------- Professional theme ---------- */
+    :root { --brand: #3b1f5c; --brand-2: #5b21b6; --ink: #111827; --muted: #6b7280; --line: #e7e4ec; --bg: #f6f5f8; }
+    body { font-family: 'Heebo', 'Assistant', Arial, sans-serif; background: var(--bg); color: var(--ink); }
+    .logo { background: none; -webkit-text-fill-color: var(--brand); color: var(--brand); font-weight: 800; letter-spacing: -0.5px; font-size: 2.3rem; }
+    .subtitle { color: var(--muted); font-weight: 400; font-size: 1rem; max-width: 680px; margin: 0 auto; line-height: 1.5; }
+    .search-box input { border: 1px solid #d9d4e1; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,.04); backdrop-filter: none; background: #fff; }
+    .search-box input:focus { transform: none; border-color: var(--brand-2); box-shadow: 0 0 0 3px rgba(91,33,182,.12); }
+    .search-box::before { content: ''; width: 20px; height: 20px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") center / contain no-repeat; z-index: 1; }
+    .clear-btn { background: #f3f4f6; color: var(--muted); }
+    .clear-btn:hover { background: #e5e7eb; }
+    .suggestions { border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(16,24,40,.12); }
+    .suggestions li { border-radius: 8px; }
+    .suggestions li.active, .suggestions li:hover { background: #f5f3f8; }
+    .suggestions .kind { color: var(--brand-2); background: #f1ecf8; }
+    .quick-chip { border: 1px solid var(--line); background: #fff; color: #4b5563; border-radius: 999px; }
+    .quick-chip:hover { border-color: var(--brand-2); color: var(--brand-2); background: #fff; }
+    .filter-label { color: var(--muted); font-weight: 600; font-size: 0.8rem; letter-spacing: .3px; }
+    .filter-btn { background: #fff; border: 1px solid var(--line); color: #374151; box-shadow: none; backdrop-filter: none; border-radius: 999px; font-weight: 500; }
+    .filter-btn:hover { transform: none; box-shadow: none; border-color: var(--brand-2); color: var(--brand-2); }
+    .filter-btn.active, .filter-btn.active:hover { background: var(--brand); border-color: var(--brand); color: #fff; box-shadow: none; }
+    .filter-btn .n { opacity: .6; }
+    .select-filter { border-radius: 10px; border: 1px solid #d9d4e1; background: #fff; color: #374151; }
+    .select-filter.on { border-color: var(--brand-2); color: var(--brand-2); }
+    .count { color: #4b5563; font-weight: 500; }
+    .link-btn { color: var(--brand-2); }
+    .service-card { background: #fff; backdrop-filter: none; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.04); }
+    .service-card:hover { transform: none; box-shadow: 0 6px 18px rgba(16,24,40,.08); border-color: #d8d1e3; }
+    .service-content { padding: 20px; }
+    .service-title, .svc .service-title { color: var(--ink); font-weight: 600; font-size: 1.05rem; }
+    .service-description, .svc-snippet { color: #4b5563; }
+    .svc + .svc { border-top: 1px solid #f0edf4; }
+    .provider-avatar { background: #efe9f6; color: var(--brand); font-weight: 700; }
+    .provider-name { color: var(--ink); font-weight: 600; font-size: 1rem; }
+    .provider-city { color: var(--muted); }
+    .badge { border: none; border-radius: 6px; padding: 3px 10px; font-size: 0.78rem; font-weight: 500; backdrop-filter: none; }
+    .badge-category { background: #f3f4f6; color: #4b5563; border: none; }
+    .badge-price { background: #eef6f1; color: #166534; border: none; }
+    .badge-holiday { background: #fef6e7; color: #92400e; border: none; }
+    .badge-gift { background: #fdf2f8; color: #9d174d; font-weight: 600; }
+    .badge-benefit { background: #ecfdf5; color: #065f46; font-weight: 600; }
+    .details-btn { color: var(--brand-2); }
+    .contact-btn:hover { transform: none; box-shadow: none; }
+    .contact-btn.icon, .btn-phone.icon, .btn-email.icon, .btn-instagram.icon, .btn-website.icon { background: #fff; border: 1px solid var(--line); color: #4b5563; border-radius: 10px; }
+    .contact-btn.icon:hover { border-color: var(--brand-2); color: var(--brand-2); }
+    .btn-whatsapp.primary { background: #1fa855; border-color: #1fa855; border-radius: 10px; font-weight: 600; }
+    .btn-whatsapp.primary:hover { background: #198f48; }
+    mark { background: #fef3c7; }
+    .no-results h3 { color: var(--brand); }
+    footer { background: #fff !important; backdrop-filter: none !important; border: 1px solid var(--line) !important; border-radius: 14px !important; }
+    @media (max-width: 768px) { body { padding: 12px; } .logo { font-size: 1.8rem; } .search-box input { padding: 14px 48px 14px 44px; } }
 </style>
 </head>
 <body>
