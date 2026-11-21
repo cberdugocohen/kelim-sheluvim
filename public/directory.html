@@ -533,8 +533,9 @@
     });
     SYNONYM_GROUPS.flat().forEach(w => VOCAB.add(norm(w)));
 
+    const STOPWORDS_N = new Set([...STOPWORDS].map(norm));
     function parseQuery(q) {
-      return words(q).filter(t => (t.length >= 2 && !STOPWORDS.has(t)) || /^\d+$/.test(t));
+      return words(q).filter(t => (t.length >= 2 && !STOPWORDS_N.has(t)) || /^\d+$/.test(t));
     }
 
     function expandToken(q) {
@@ -636,7 +637,7 @@
     }
 
     // ---------- UI ----------
-    const state = { query: '', group: 'all', region: '', area: '', type: '' };
+    const state = { query: '', group: 'all', region: '', area: '', type: '', provider: '' };
     const $ = id => document.getElementById(id);
     const input = $('searchInput'), suggestBox = $('suggestions'), clearBtn = $('clearBtn');
     const areaSelect = $('areaFilter'), typeSelect = $('typeFilter');
@@ -688,7 +689,8 @@
     $('quickChips').innerHTML = QUICK_SEARCHES.map(q => `<button type="button" class="quick-chip">${esc(q)}</button>`).join('');
     $('quickChips').onclick = e => { if (e.target.classList.contains('quick-chip')) setQuery(e.target.textContent); };
 
-    function setQuery(q) {
+    function setQuery(q, provider) {
+      state.provider = provider || '';
       input.value = q;
       state.query = q;
       hideSuggestions();
@@ -696,7 +698,7 @@
     }
 
     function resetAll() {
-      Object.assign(state, { query: '', group: 'all', region: '', area: '', type: '' });
+      Object.assign(state, { query: '', group: 'all', region: '', area: '', type: '', provider: '' });
       input.value = '';
       render();
     }
@@ -704,7 +706,8 @@
     clearBtn.onclick = () => { setQuery(''); input.focus(); };
 
     function passes(s, ignoreGroup, ignoreRegion) {
-      return (ignoreGroup || state.group === 'all' || s._group === state.group) &&
+      return (!state.provider || s._pkey === state.provider) &&
+        (ignoreGroup || state.group === 'all' || s._group === state.group) &&
         (ignoreRegion || !state.region || s._regions.includes(state.region)) &&
         (ignoreRegion || !state.area || s._area === state.area) &&
         (!state.type || s.type === state.type);
@@ -820,7 +823,7 @@
               </div>
             </div>
             ${svcHtml}
-            ${total > items.length && s.provider_name ? `<button type="button" class="link-btn more-btn" data-name="${esc(s.provider_name)}">לכל ${total} השירותים שלה</button>` : ''}
+            ${total > items.length && s.provider_name ? `<button type="button" class="link-btn more-btn" data-name="${esc(s.provider_name)}" data-key="${esc(s._pkey)}">לכל ${total} השירותים שלה</button>` : ''}
             <div class="contact-buttons">
               ${s.provider_phone ? `<a href="https://wa.me/${whatsappPhone}" target="_blank" class="contact-btn btn-whatsapp">וואטסאפ</a>` : ''}
               ${s.provider_phone ? `<a href="tel:${esc(s.provider_phone)}" class="contact-btn btn-phone">טלפון</a>` : ''}
@@ -831,7 +834,7 @@
         </div>
         `;
       }).join('');
-      grid.querySelectorAll('.more-btn').forEach(b => b.onclick = () => { Object.assign(state, { group: 'all', region: '', area: '', type: '' }); setQuery(b.dataset.name); });
+      grid.querySelectorAll('.more-btn').forEach(b => b.onclick = () => { Object.assign(state, { group: 'all', region: '', area: '', type: '' }); setQuery(b.dataset.name, b.dataset.key); });
       syncUrl();
     }
 
@@ -893,7 +896,7 @@
       clearBtn.hidden = !input.value;
       showSuggestions();
       clearTimeout(debounce);
-      debounce = setTimeout(() => { state.query = input.value; render(); }, 150);
+      debounce = setTimeout(() => { state.query = input.value; state.provider = ''; render(); }, 150);
     });
     input.addEventListener('keydown', e => {
       if (e.key === 'ArrowDown') { e.preventDefault(); suggestBox.hidden ? showSuggestions() : moveSuggestion(1); }
