@@ -619,7 +619,7 @@
       if (!tokens.length) return { ...none, results: services.map(s => ({ s, score: 0, hits: [] })) };
       const det = detectArea(tokens);
       const textTokens = det ? det.rest : tokens;
-      const inArea = s => !det || s._area === det.area || norm(s.provider_city) === norm(det.area) || s._regions.includes(det.area);
+      const inArea = s => !det || s._area === det.area || (s._area === 'כל הארץ' && det.area !== ONLINE) || norm(s.provider_city) === norm(det.area) || s._regions.includes(det.area);
       const areaHits = det ? det.ws : [];
       if (!textTokens.length) {
         return { ...none, mode: 'and', area: det.area, results: services.filter(inArea).map(s => ({ s, score: 0, hits: areaHits })) };
@@ -729,7 +729,7 @@
       return (!state.provider || s._pkey === state.provider) &&
         (ignoreGroup || state.group === 'all' || s._group === state.group) &&
         (ignoreRegion || !state.region || s._regions.includes(state.region)) &&
-        (ignoreRegion || !state.area || s._area === state.area) &&
+        (ignoreRegion || !state.area || s._area === state.area || s._area === 'כל הארץ') &&
         (!state.type || s._types.includes(state.type));
     }
 
