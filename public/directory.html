@@ -488,6 +488,40 @@
     .select-filter { border-color: #e6d9d0; }
     mark { background: #fbe3c6; }
     @media (max-width: 768px) { header { padding: 18px 14px 14px; border-radius: 18px; } .eyebrow { font-size: 0.75rem; margin-bottom: 6px; } }
+
+    /* ---------- Compact filter panel ---------- */
+    header { padding: 20px 20px 16px; }
+    .quick-chips { margin-top: 10px; }
+    .filter-toggle { display: none; }
+    .filter-panel { max-width: 1040px; margin: 10px auto 0; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 10px 16px; }
+    .filter-row { display: flex; align-items: flex-start; gap: 12px; padding: 4px 0; }
+    .filter-row .filter-label { margin: 0; flex: 0 0 40px; text-align: right; padding-top: 8px; }
+    .filter-row .filters, .filter-row .region-filters { justify-content: flex-start; flex-wrap: wrap; margin: 0; gap: 6px; }
+    .filter-panel .filter-btn, .filter-panel .region-filters .filter-btn { padding: 6px 12px; font-size: 0.85rem; }
+    .filter-panel .sub-filters { justify-content: flex-start; margin: 6px 0 2px; padding-right: 52px; }
+    .search-container { margin: 14px auto 0; }
+    .search-hint { margin-top: 6px; min-height: 0; }
+    .search-hint:empty { display: none; }
+    .subtitle { max-width: 860px; font-size: 0.95rem; }
+    .logo { font-size: 2.1rem; margin-bottom: 4px; }
+    .eyebrow { margin-bottom: 6px; }
+    .filter-panel .select-filter { min-width: 0; }
+    @media (max-width: 768px) {
+      .subtitle { font-size: 0.8rem; }
+      .filter-panel .sub-filters { flex-wrap: nowrap; gap: 8px; }
+      .filter-panel .sub-filters .select-filter { flex: 1 1 0; width: auto; }
+      .filter-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin: 8px 0 4px; padding: 11px 14px; background: #fff; border: 1px solid #e6d9d0; border-radius: 12px; color: var(--brand); font: inherit; font-weight: 600; font-size: 0.92rem; cursor: pointer; }
+      .filter-toggle .fc { background: var(--brand); color: #fff; border-radius: 999px; min-width: 20px; height: 20px; font-size: 0.75rem; display: inline-flex; align-items: center; justify-content: center; padding: 0 6px; }
+      .filter-toggle .fc[hidden] { display: none; }
+      .filter-toggle .chev { transition: transform .2s; }
+      .filter-toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
+      .filter-panel { display: none; margin: 0 0 6px; padding: 6px 10px 8px; }
+      .filter-panel.open { display: block; }
+      .filter-row { display: block; padding: 2px 0; }
+      .filter-row .filter-label { padding-top: 0; margin: 4px 2px 0; }
+      .filter-row .filters, .filter-row .region-filters { flex-wrap: nowrap; overflow-x: auto; }
+      .filter-panel .sub-filters { padding-right: 0; justify-content: center; }
+    }
 </style>
 </head>
 <body>
@@ -508,15 +542,16 @@
       <div class="search-hint" id="searchHint"></div>
     </div>
 
-    <div class="filter-label">תחום</div>
-    <div class="filters" id="categoryFilters"></div>
+    <button type="button" class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="filterPanel">סינון לפי תחום, אזור וסוג <span class="fc" id="filterCount" hidden></span><span class="chev">▾</span></button>
+    <div class="filter-panel" id="filterPanel">
+      <div class="filter-row"><div class="filter-label">תחום</div><div class="filters" id="categoryFilters"></div></div>
 
-    <div class="filter-label">אזור</div>
-    <div class="region-filters" id="regionFilters"></div>
+      <div class="filter-row"><div class="filter-label">אזור</div><div class="region-filters" id="regionFilters"></div></div>
 
     <div class="sub-filters">
       <select id="areaFilter" class="select-filter" aria-label="סינון לפי עיר" hidden><option value="">כל הערים באזור</option></select>
       <select id="typeFilter" class="select-filter" aria-label="סינון לפי סוג"><option value="">כל הסוגים</option></select>
+    </div>
     </div>
 
     <div class="count"><span id="serviceCount"></span> <button type="button" class="link-btn" id="resetAll" hidden>ניקוי כל הסינונים</button></div>
@@ -826,6 +861,10 @@
     AREA_PHRASES.sort((a, b) => b.ws.length - a.ws.length);
     areaSelect.onchange = () => { state.area = areaSelect.value; render(); };
     typeSelect.onchange = () => { state.type = typeSelect.value; render(); };
+    $('filterToggle').onclick = () => {
+      const open = $('filterPanel').classList.toggle('open');
+      $('filterToggle').setAttribute('aria-expanded', open);
+    };
 
     $('quickChips').innerHTML = QUICK_SEARCHES.map(q => `<button type="button" class="quick-chip">${esc(q)}</button>`).join('');
     $('quickChips').onclick = e => { if (e.target.classList.contains('quick-chip')) setQuery(e.target.textContent); };
@@ -898,6 +937,8 @@
         ? 'מציג את כל ' + services.length + ' השירותים'
         : 'נמצאו ' + filtered.length + ' שירותים' + (state.query.trim() ? ' עבור "' + state.query.trim() + '"' : '');
       $('resetAll').hidden = !anyFilter;
+      const nFilters = (state.group !== 'all') + !!state.region + !!state.area + !!state.type;
+      $('filterCount').textContent = nFilters; $('filterCount').hidden = !nFilters;
       clearBtn.hidden = !state.query;
       $('quickChips').hidden = !!state.query.trim();
       const regionCounts = { '': 0 };
