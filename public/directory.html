@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>כלים שלובים - יוזמה פרטית של תלמידות הרב</title>
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -464,11 +464,36 @@
     .no-results h3 { color: var(--brand); }
     footer { background: #fff !important; backdrop-filter: none !important; border: 1px solid var(--line) !important; border-radius: 14px !important; }
     @media (max-width: 768px) { body { padding: 12px; } .logo { font-size: 1.8rem; } .search-box input { padding: 14px 48px 14px 44px; } }
+
+    /* ---------- Warm plum & cream ---------- */
+    :root { --brand: #6d2c55; --brand-2: #8e3b6f; --ink: #2a1e26; --muted: #7b6b74; --line: #ece2da; --bg: #fbf7f2; }
+    body { font-family: 'Rubik', 'Assistant', Arial, sans-serif; background: var(--bg); }
+    header { background: linear-gradient(160deg, #f7e9ef 0%, #fbf3ec 100%); border: 1px solid var(--line); border-radius: 24px; padding: 28px 20px 22px; margin-bottom: 8px; }
+    .eyebrow { display: inline-block; color: var(--brand-2); background: #fff; border: 1px solid #ecd6e1; border-radius: 999px; padding: 4px 14px; font-size: 0.82rem; font-weight: 500; margin-bottom: 10px; }
+    .logo { color: var(--brand); -webkit-text-fill-color: var(--brand); font-weight: 700; letter-spacing: 0; }
+    .search-box input { border-color: #e6d9d0; border-radius: 16px; }
+    .search-box input:focus { border-color: var(--brand-2); box-shadow: 0 0 0 3px rgba(142,59,111,.14); }
+    .suggestions .kind { background: #f6e8ef; }
+    .filter-btn, .quick-chip { border-color: #e6d9d0; }
+    .service-card { border-radius: 18px; border-color: var(--line); box-shadow: 0 1px 3px rgba(80,40,60,.05); }
+    .service-card:hover { border-color: #e2cdd8; box-shadow: 0 8px 22px rgba(80,40,60,.08); }
+    .provider-avatar { background: #f6e8ef; color: var(--brand); }
+    .badge { border-radius: 999px; }
+    .badge-category { background: #f5efe9; color: #6b5a52; }
+    .badge-price { background: #eef5ee; color: #2f6b3a; }
+    .badge-gift { background: #fbe9f0; color: #9b2c5e; }
+    .badge-benefit { background: #fdf0e1; color: #9a4f12; }
+    .contact-btn.icon, .btn-phone.icon, .btn-email.icon, .btn-instagram.icon, .btn-website.icon { border-color: #e6d9d0; border-radius: 12px; }
+    .btn-whatsapp.primary { border-radius: 12px; }
+    .select-filter { border-color: #e6d9d0; }
+    mark { background: #fbe3c6; }
+    @media (max-width: 768px) { header { padding: 18px 14px 14px; border-radius: 18px; } .eyebrow { font-size: 0.75rem; margin-bottom: 6px; } }
 </style>
 </head>
 <body>
   <div class="container">
     <header>
+      <div class="eyebrow">נשים ממליצות על נשים</div>
       <h1 class="logo">כלים שלובים</h1>
       <p class="subtitle">יוזמה פרטית של תלמידות הרב להעמקת שיתופי הפעולה בינינו וליצירת עדיפות לצריכת מוצרים ושירותים מתלמידות לתלמידות - <span id="totalCount"></span> שירותים</p>
     </header>
