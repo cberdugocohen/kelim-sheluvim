@@ -368,6 +368,17 @@
     .filter-label { text-align: center; color: #7c3aed; font-weight: 700; font-size: 0.9rem; margin: 18px 0 -14px; }
     .region-filters { margin-top: 20px; }
     .btn-website { background: rgba(14, 165, 233, 0.1); color: #0284c7; border: 1px solid rgba(14, 165, 233, 0.25); }
+    .service-card:not(.expanded) .service-image,
+    .service-card:not(.expanded) .svc-video,
+    .service-card:not(.expanded) .service-description { display: none; }
+    .service-card.expanded .service-description { display: block; -webkit-line-clamp: unset; line-clamp: unset; }
+    .service-card:not(.expanded) .svc .service-title { margin-bottom: 4px; }
+    .service-card:not(.expanded) .svc .service-meta { margin-bottom: 8px; }
+    .service-card:not(.expanded) .svc + .svc { padding-top: 10px; }
+    .provider-avatar { overflow: hidden; flex-shrink: 0; width: 48px; height: 48px; }
+    .provider-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .services-grid { align-items: start; }
+    .details-btn { display: block; margin: 2px 0 12px; font-weight: 600; text-decoration: none; }
 </style>
 </head>
 <body>
@@ -832,18 +843,20 @@
             </div>`;
         }).join('');
         const area = s.geographic_area || s.provider_city;
+        const hasDetails = image || shownDesc.size > (shownDesc.has('') ? 1 : 0) || items.some(r => (r.s.images || []).some(u => /\.(mp4|mov|webm)(\?|$)/i.test(u)));
         return `
         <div class="service-card">
           ${image ? `<img src="${esc(image)}" class="service-image" alt="${esc(s.provider_name || s.title)}" loading="lazy" onerror="this.style.display='none'">` : ''}
           <div class="service-content">
             <div class="provider top">
-              <div class="provider-avatar">${esc(initials)}</div>
+              <div class="provider-avatar">${image ? `<img src="${esc(image)}" alt="" loading="lazy" onerror="this.remove()">` : esc(initials)}</div>
               <div class="provider-info">
                 <div class="provider-name">${highlight(s.provider_name || 'ללא שם', allHits)}</div>
                 <div class="provider-city">${highlight(area, allHits)}${items.length > 1 ? ' · ' + items.length + ' שירותים' : ''}</div>
               </div>
             </div>
             ${svcHtml}
+            ${hasDetails ? `<button type="button" class="link-btn details-btn" aria-expanded="false">פרטים נוספים ▾</button>` : ''}
             ${total > items.length && s.provider_name ? `<button type="button" class="link-btn more-btn" data-name="${esc(s.provider_name)}" data-key="${esc(s._pkey)}">לכל ${total} השירותים שלה</button>` : ''}
             <div class="contact-buttons">
               ${s.provider_phone ? `<a href="https://wa.me/${whatsappPhone}" target="_blank" class="contact-btn btn-whatsapp">וואטסאפ</a>` : ''}
@@ -856,6 +869,13 @@
         </div>
         `;
       }).join('');
+      grid.querySelectorAll('.details-btn').forEach(b => b.onclick = () => {
+        const card = b.closest('.service-card');
+        const open = card.classList.toggle('expanded');
+        b.setAttribute('aria-expanded', open);
+        b.textContent = open ? 'הסתרת פרטים ▴' : 'פרטים נוספים ▾';
+        if (!open) card.querySelectorAll('video').forEach(v => v.pause());
+      });
       grid.querySelectorAll('.more-btn').forEach(b => b.onclick = () => { Object.assign(state, { group: 'all', region: '', area: '', type: '' }); setQuery(b.dataset.name, b.dataset.key); });
       syncUrl();
     }
