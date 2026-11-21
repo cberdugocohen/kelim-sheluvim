@@ -619,7 +619,7 @@
       if (!tokens.length) return { ...none, results: services.map(s => ({ s, score: 0, hits: [] })) };
       const det = detectArea(tokens);
       const textTokens = det ? det.rest : tokens;
-      const inArea = s => !det || s._area === det.area || (s._area === 'כל הארץ' && det.area !== ONLINE) || norm(s.provider_city) === norm(det.area) || s._regions.includes(det.area);
+      const inArea = s => !det || s._area === det.area || (s._area === 'כל הארץ' && det.area !== ONLINE && regionOf(det.area) !== ONLINE) || norm(s.provider_city) === norm(det.area) || s._regions.includes(det.area);
       const areaHits = det ? det.ws : [];
       if (!textTokens.length) {
         return { ...none, mode: 'and', area: det.area, results: services.filter(inArea).map(s => ({ s, score: 0, hits: areaHits })) };
