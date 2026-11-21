@@ -358,6 +358,7 @@
     .join-fab:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(37, 211, 102, 0.55); }
     .region-filters { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0 0 12px; }
     .region-filters .filter-btn { padding: 8px 16px; font-size: 0.88rem; }
+    .svc-video { width: 100%; max-height: 320px; border-radius: 12px; margin: 6px 0 10px; background: #000; }
     .svc + .svc { border-top: 1px dashed rgba(139, 92, 246, 0.25); padding-top: 14px; }
     .svc .service-title { font-size: 1.1rem; margin-bottom: 6px; }
     .svc .service-meta { margin-bottom: 14px; }
@@ -527,6 +528,10 @@
       s._pkey = (s.provider_phone || '').replace(/\D/g, '').slice(-9) || (s.provider_email || '').toLowerCase() || s.provider_name || 'i' + i;
       PROVIDER_COUNT[s._pkey] = (PROVIDER_COUNT[s._pkey] || 0) + 1;
       s._regions = [regionOf(s._area)].filter(Boolean);
+      const typeText = [s.title, s.description, s.price].join(' ');
+      s._types = [s.type].filter(Boolean);
+      if (/בארטר|ברטר/.test(typeText) && !s._types.includes('barter')) s._types.push('barter');
+      if (/ללא עלות|ללא תשלום|בחינם/.test(typeText) && !s._types.includes('gift')) s._types.push('gift');
       if (!s._regions.includes(ONLINE) && ONLINE_RE.test([s.title, s.description, s.geographic_area].join(' '))) s._regions.push(ONLINE);
       const fields = {
         title: s.title,
@@ -534,7 +539,7 @@
         provider: s.provider_name,
         area: [s.geographic_area, s.provider_city].join(' '),
         description: s.description,
-        extra: [s.price, TYPE_WORDS[s.type], s.is_holiday ? 'חג ' + (s.holiday_type || '') : ''].join(' ')
+        extra: [s.price, s._types.map(k => TYPE_WORDS[k]).join(' '), s.is_holiday ? 'חג ' + (s.holiday_type || '') : ''].join(' ')
       };
       s._fields = Object.entries(fields).map(([k, v]) => {
         const ws = words(v);
@@ -687,7 +692,7 @@
       areaSelect.hidden = areaSelect.options.length <= 2;
     }
     Object.entries(TYPE_LABELS).forEach(([k, v]) => {
-      const n = services.filter(s => s.type === k).length;
+      const n = services.filter(s => s._types.includes(k)).length;
       if (n) typeSelect.add(new Option(v + ' (' + n + ')', k));
     });
     Object.keys(areaCounts).forEach(a => AREA_PHRASES.push({ area: a, ws: words(a) }));
@@ -722,7 +727,7 @@
         (ignoreGroup || state.group === 'all' || s._group === state.group) &&
         (ignoreRegion || !state.region || s._regions.includes(state.region)) &&
         (ignoreRegion || !state.area || s._area === state.area) &&
-        (!state.type || s.type === state.type);
+        (!state.type || s._types.includes(state.type));
     }
 
     function highlight(text, hitSet) {
@@ -813,11 +818,12 @@
           return `
             <div class="svc">
               <h3 class="service-title">${highlight(v.title, hitSet)}</h3>
+              ${(v.images || []).filter(u => /\.(mp4|mov|webm)(\?|$)/i.test(u)).map(u => `<video class="svc-video" src="${esc(u)}" controls preload="metadata" playsinline></video>`).join('')}
               ${showDesc ? `<p class="service-description${descHit ? ' open' : ''}">${highlight(v.description, hitSet)}</p>` : ''}
               <div class="service-meta">
                 ${v.category ? `<span class="badge badge-category">${highlight(v.category, hitSet)}</span>` : ''}
                 ${v.price ? `<span class="badge badge-price">${esc(v.price)}</span>` : ''}
-                ${v.type === 'gift' ? `<span class="badge badge-price">מתנה</span>` : v.type === 'barter' ? `<span class="badge badge-price">בארטר</span>` : ''}
+                ${v._types.filter(k => k !== 'paid').map(k => `<span class="badge badge-price">${k === 'gift' ? 'מתנה' : 'בארטר'}</span>`).join('')}
                 ${v.is_holiday ? `<span class="badge badge-holiday">${esc(v.holiday_type || 'חג')}</span>` : ''}
               </div>
             </div>`;
@@ -838,7 +844,7 @@
             ${total > items.length && s.provider_name ? `<button type="button" class="link-btn more-btn" data-name="${esc(s.provider_name)}" data-key="${esc(s._pkey)}">לכל ${total} השירותים שלה</button>` : ''}
             <div class="contact-buttons">
               ${s.provider_phone ? `<a href="https://wa.me/${whatsappPhone}" target="_blank" class="contact-btn btn-whatsapp">וואטסאפ</a>` : ''}
-              ${s.provider_phone ? `<a href="tel:${esc(s.provider_phone)}" class="contact-btn btn-phone">טלפון</a>` : ''}
+              ${s.provider_phone ? `<a href="tel:${esc(s.provider_phone.replace(/[^\d+]/g, ''))}" class="contact-btn btn-phone">טלפון</a>` : ''}
               ${s.provider_email ? `<a href="mailto:${esc(s.provider_email)}" class="contact-btn btn-email">מייל</a>` : ''}
               ${igUrl(s.provider_instagram) ? `<a href="${esc(igUrl(s.provider_instagram))}" target="_blank" rel="noopener" class="contact-btn btn-instagram">אינסטגרם</a>` : ''}
               ${webUrl(s.provider_website) && webUrl(s.provider_website) !== igUrl(s.provider_instagram) ? `<a href="${esc(webUrl(s.provider_website))}" target="_blank" rel="noopener" class="contact-btn btn-website">אתר</a>` : ''}
@@ -896,7 +902,7 @@
     function moveSuggestion(d) {
       const items = suggestBox.querySelectorAll('li');
       if (!items.length) return;
-      activeSuggestion = (activeSuggestion + d + items.length) % items.length;
+      activeSuggestion = activeSuggestion < 0 && d < 0 ? items.length - 1 : (activeSuggestion + d + items.length) % items.length;
       items.forEach((li, i) => li.classList.toggle('active', i === activeSuggestion));
     }
     suggestBox.addEventListener('mousedown', e => {
@@ -936,6 +942,7 @@
       if (state.region) p.set('region', state.region);
       if (state.area) p.set('area', state.area);
       if (state.type) p.set('type', state.type);
+      if (state.provider) p.set('p', state.provider);
       const h = p.toString();
       try { history.replaceState(null, '', h ? '#' + h : location.pathname + location.search); } catch (e) {}
     }
@@ -947,6 +954,7 @@
       state.region = regionButtons[p.get('region')] ? p.get('region') : (state.area ? regionOf(state.area) : '');
       if (!REGIONS[state.region]) state.area = '';
       state.type = TYPE_LABELS[p.get('type')] ? p.get('type') : '';
+      state.provider = PROVIDER_COUNT[p.get('p')] ? p.get('p') : '';
       input.value = state.query;
     })();
 
