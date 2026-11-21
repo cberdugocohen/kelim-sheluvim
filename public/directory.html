@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>כלים שלובים - יוזמה פרטית של תלמידות הרב</title>
+  <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Varela Round', 'Heebo', 'Assistant', sans-serif;
+      background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 30%, #ede9fe 60%, #e0e7ff 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    /* Header */
+    header {
+      text-align: center;
+      padding: 40px 0 30px;
+    }
+    .logo {
+      font-size: 2.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #6b7280;
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+    
+    /* Search */
+    .search-container {
+      max-width: 600px;
+      margin: 30px auto;
+    }
+    .search-box {
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 18px 24px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease;
+    }
+    .search-box input:focus {
+      outline: none;
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+      transform: translateY(-2px);
+    }
+    .search-box::before {
+      content: '🔍';
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+    }
+    
+    /* Filters */
+    .filters {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      color: #6b7280;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    .filter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.15);
+      color: #8b5cf6;
+    }
+    .filter-btn.active {
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    }
+    
+    /* Count */
+    .count {
+      text-align: center;
+      color: #8b5cf6;
+      font-weight: 600;
+      margin: 20px 0;
+      font-size: 1rem;
+    }
+    
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 30px;
+      padding-bottom: 40px;
+    }
+    
+    /* Service Card - Glass Effect */
+    .service-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.12);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .service-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+    }
+    
+    .service-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    }
+    
+    .service-content {
+      padding: 24px;
+    }
+    
+    .service-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    
+    .service-description {
+      color: #64748b;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    /* Badges */
+    .service-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      backdrop-filter: blur(5px);
+    }
+    .badge-category { 
+      background: rgba(139, 92, 246, 0.1); 
+      color: #8b5cf6; 
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+    .badge-area { 
+      background: rgba(59, 130, 246, 0.1); 
+      color: #3b82f6; 
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    .badge-price { 
+      background: rgba(34, 197, 94, 0.1); 
+      color: #22c55e; 
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+    .badge-holiday { 
+      background: rgba(245, 158, 11, 0.1); 
+      color: #f59e0b; 
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    
+    /* Provider */
+    .provider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      margin-bottom: 16px;
+    }
+    .provider-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .provider-info {
+      flex: 1;
+    }
+    .provider-name {
+      font-weight: 600;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+    .provider-city {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    
+    /* Contact Buttons */
+    .contact-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .contact-btn {
+      flex: 1;
+      min-width: 70px;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-whatsapp { 
+      background: rgba(37, 211, 102, 0.1); 
+      color: #25d366; 
+      border: 1px solid rgba(37, 211, 102, 0.2);
+    }
+    .btn-phone { 
+      background: rgba(59, 130, 246, 0.1); 
+      color: #3b82f6; 
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    .btn-email { 
+      background: rgba(245, 158, 11, 0.1); 
+      color: #f59e0b; 
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .btn-instagram { 
+      background: rgba(236, 72, 153, 0.1); 
+      color: #ec4899; 
+      border: 1px solid rgba(236, 72, 153, 0.2);
+    }
+    .contact-btn:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    /* No Results */
+    .no-results {
+      text-align: center;
+      padding: 80px 20px;
+      color: #64748b;
+    }
+    .no-results h3 { 
+      font-size: 1.5rem; 
+      margin-bottom: 10px;
+      color: #8b5cf6;
+    }
+    
+    /* Smart search */
+    [hidden] { display: none !important; }
+    .search-box input { padding-right: 54px; padding-left: 50px; }
+    .clear-btn {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      border: none; background: rgba(139, 92, 246, 0.1); color: #8b5cf6;
+      width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; line-height: 1; cursor: pointer;
+    }
+    .clear-btn:hover { background: rgba(139, 92, 246, 0.2); }
+    .suggestions {
+      position: absolute; top: calc(100% + 8px); right: 0; left: 0; z-index: 20;
+      list-style: none; background: #fff; border-radius: 20px; padding: 8px;
+      box-shadow: 0 12px 40px rgba(139, 92, 246, 0.18); max-height: 340px; overflow: auto;
+    }
+    .suggestions li {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: 12px; cursor: pointer; color: #374151;
+    }
+    .suggestions li.active, .suggestions li:hover { background: rgba(139, 92, 246, 0.08); }
+    .suggestions .kind {
+      font-size: 0.75rem; color: #8b5cf6; background: rgba(139, 92, 246, 0.1);
+      padding: 2px 10px; border-radius: 10px; white-space: nowrap;
+    }
+    .quick-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+    .quick-chip {
+      border: 1px dashed rgba(139, 92, 246, 0.4); background: rgba(255, 255, 255, 0.6); color: #7c3aed;
+      padding: 6px 14px; border-radius: 20px; font-family: inherit; font-size: 0.85rem; cursor: pointer;
+    }
+    .quick-chip:hover { background: #fff; }
+    .search-hint { text-align: center; color: #6b7280; font-size: 0.9rem; margin-top: 12px; min-height: 1.2em; }
+    .link-btn {
+      color: #db2777; cursor: pointer; text-decoration: underline; background: none; border: none;
+      font: inherit; padding: 0 2px;
+    }
+    .sub-filters { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: -5px 0 10px; }
+    .select-filter {
+      padding: 10px 18px; border-radius: 30px; border: 1px solid rgba(139, 92, 246, 0.2);
+      background: rgba(255, 255, 255, 0.85); font-family: inherit; font-size: 0.9rem; color: #4b5563; cursor: pointer;
+    }
+    .select-filter.on { border-color: #8b5cf6; color: #7c3aed; }
+    .filter-btn .n { opacity: 0.7; font-size: 0.8em; margin-right: 4px; }
+    .filter-btn.empty { opacity: 0.45; }
+    .service-description.open { -webkit-line-clamp: unset; line-clamp: unset; display: block; }
+    mark { background: linear-gradient(transparent 55%, rgba(236, 72, 153, 0.3) 55%); color: inherit; padding: 0 1px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .logo { font-size: 2rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .filters { gap: 8px; }
+      .filter-btn { padding: 10px 16px; font-size: 0.85rem; }
+    }
+
+    .join-fab {
+      position: fixed; bottom: 20px; left: 20px; z-index: 50; display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: 999px; background: #25d366; color: #fff; font-weight: 700; font-size: 0.95rem;
+      text-decoration: none; box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45); transition: transform .2s, box-shadow .2s;
+    }
+    .join-fab:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(37, 211, 102, 0.55); }
+    .region-filters { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0 0 12px; }
+    .region-filters .filter-btn { padding: 8px 16px; font-size: 0.88rem; }
+    .svc + .svc { border-top: 1px dashed rgba(139, 92, 246, 0.25); padding-top: 14px; }
+    .svc .service-title { font-size: 1.1rem; margin-bottom: 6px; }
+    .svc .service-meta { margin-bottom: 14px; }
+    .provider.top { border-top: none; padding-top: 0; }
+    .more-btn { display: block; margin: 0 0 14px; }
+    @media (max-width: 768px) { .join-fab { left: 12px; bottom: 12px; padding: 10px 16px; font-size: 0.85rem; } }
+    .filter-label { text-align: center; color: #7c3aed; font-weight: 700; font-size: 0.9rem; margin: 18px 0 -14px; }
+    .region-filters { margin-top: 20px; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="logo">כלים שלובים</h1>
+      <p class="subtitle">יוזמה פרטית של תלמידות הרב להעמקת שיתופי הפעולה בינינו וליצירת עדיפות לצריכת מוצרים ושירותים מתלמידות לתלמידות - <span id="totalCount"></span> שירותים</p>
+    </header>
+
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="מה את מחפשת? למשל: עיסוי בפרדס חנה, ייעוץ זוגי, מתנה" autocomplete="off" aria-label="חיפוש שירותים" aria-autocomplete="list" aria-controls="suggestions">
+        <button type="button" class="clear-btn" id="clearBtn" aria-label="ניקוי החיפוש" hidden>×</button>
+        <ul class="suggestions" id="suggestions" role="listbox" hidden></ul>
+      </div>
+      <div class="quick-chips" id="quickChips"></div>
+      <div class="search-hint" id="searchHint"></div>
+    </div>
+
+    <div class="filter-label">תחום</div>
+    <div class="filters" id="categoryFilters"></div>
+
+    <div class="filter-label">אזור</div>
+    <div class="region-filters" id="regionFilters"></div>
+
+    <div class="sub-filters">
+      <select id="areaFilter" class="select-filter" aria-label="סינון לפי עיר" hidden><option value="">כל הערים באזור</option></select>
+      <select id="typeFilter" class="select-filter" aria-label="סינון לפי סוג"><option value="">כל הסוגים</option></select>
+    </div>
+
+    <div class="count"><span id="serviceCount"></span> <button type="button" class="link-btn" id="resetAll" hidden>ניקוי כל הסינונים</button></div>
+
+    <div class="services-grid" id="servicesGrid"></div>
+
+    <div class="no-results" id="noResults" style="display:none;">
+      <h3>לא נמצאו שירותים</h3>
+      <p id="noResultsText">נסי מילה אחרת, או נקי את הסינונים</p>
+    </div>
+  </div>
+
+  <script>
+    const services = [{"title": "טיפול ריגשי ויישום באימון אישי רוחני ומעשי", "description": "השירות כולל זיהוי הבעייה, בחירת הדרך להתמודדות, טיפול ריגשי בשיטת \"המסע\" להתמודדות עם חסמים ריגשיים ואמונות, וחיבור למקור הפנימי, זיהוי הערך שקיבלנו מהתנסויות שונות בחיים, תהליכי סליחה, כלים להתבוננות פנימית, כלים מעשיים לחיי היום יום, ולנוכחות בחיים שלנו (גם כשקשה). ", "category": "טיפול וייעוץ", "geographic_area": "פרדס חנה-כרכור", "price": "350 שקלים לשעה וחצי", "type": "paid", "images": [], "provider_name": "Sigalit Michaeli", "provider_city": "פרדס חנה-כרכור", "provider_phone": "0542444895", "provider_email": "sigalit.michaeli@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "יועצת לפי שיטת תורת הנפש - פסיכולוגיה יהודית", "description": "מרגישה תקועה בזוגיות, מול הילדים או בעבודה? הבעש\"ט לימד שהמציאות היא מראה לנפש: \"הרואה פגם בזולת - בנפשו הוא רואה\". אני מזמינה אותך למסע לזיהוי השתקפות הפנים בחוץ, כדי לחולל שינוי אמיתי דרך עבודת הנפש. בואי לקבל מפתחות לריפוי וצמיחה מתוך הקושי.", "category": "טיפול וייעוץ", "geographic_area": "חולון", "price": "", "type": "paid", "images": [], "provider_name": "Havi Karni", "provider_city": "חולון", "provider_phone": "0537738267", "provider_email": "havikarni@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "כתיבה, שירות לקוחות, שיחה מלב אל לב", "description": "כתיבה שיווקית בהתנדבות. \nשירות לקוחות- בתשלום. בעלת ניסיון שנים בתחום. שירותית, אדיבה, מקשיבה, אחראית.\nמנהלת חשבונות סוג 2 ללא ניסיון.\n\nשיחה מלב אל לב למי שזקוקה", "category": "טיפוח ובריאות", "geographic_area": "קרית ים", "price": "", "type": "gift", "images": [], "provider_name": "חגית לוי", "provider_city": "קרית ים", "provider_phone": "0524869097", "provider_email": "hagitlevi0910@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "ייעוץ כלכלי למשפחות ועסקים קטנים", "description": "השירות כולל בניית תוכנית פעולה ליצירת יציבות כלכלית, בין היתר באמצעות תקציב משפחתי המותאם לצרכי המשפחה. מיועד למשפחות וזוגות המבקשים להתנהל נכון כלכלית, וכן למשפחות במשבר, בליווי אנושי ורגיש, אך חדור מטרה לתוצאות מיידיות ומיטביות. ", "category": "ייעוץ כלכלי", "geographic_area": "שפיר", "price": "", "type": "paid", "images": [], "provider_name": "Rotem Jorno", "provider_city": "שפיר", "provider_phone": "0542466776", "provider_email": "rotemjorno@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "בדיקות להתאמת טיפול במחלת הסרטן (קנסר הופ)", "description": "מטופל יקר😊 מטרתנו בקנסר-הופ היא לסייע לחולי סרטן לקבל טיפול מותאם אישית מדוייק ומתקדם, שיוביל לתוצאות הטובות ביותר. \nפחות כימותרפיה, פחות תופעות לוואי ומבלי לאבד זמן יקר.\n\nניתן לתאם ייעוץ ללא עלות עם יועץ מומחה בביולוגיה ואונקולוגיה MD/PhD. \n", "category": "טיפוח ובריאות", "geographic_area": "רעננה", "price": "", "type": "paid", "images": [], "provider_name": "Galya Basol-Kochav", "provider_city": "רעננה", "provider_phone": "0547462900", "provider_email": "galya.bk@gmail.com", "provider_instagram": "", "provider_website": "anticancer.co.il", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "גישור במשפחה", "description": "גישור בכל סוגי הסכסוכים המשפחתיים- משפטיים לרבות שלום בית; סכסוכים הורים וילדים; גירושין בהסכמה; משפחתיים עסקיים ועוד.\n\nגישור במודל טרנספורמטיבי, התפתחותי רוחני ברוח לימודי הרב נוה והרבנית עינת מים.", "category": "אחר", "geographic_area": "", "price": "", "type": "gift", "images": [], "provider_name": "Adv. Klarit Plutov", "provider_city": "", "provider_phone": "0523385934", "provider_email": "klarit26@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "ייעוץ משפטי ועריכת הסכמים משפטיים", "description": "ייעוץ משפטי ועריכת הסכמים משפטיים.", "category": "אחר", "geographic_area": "", "price": "", "type": "gift", "images": [], "provider_name": "Adv. Klarit Plutov", "provider_city": "", "provider_phone": "0523385934", "provider_email": "klarit26@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "אימון רגשי ,ייעוץ ", "description": "עוסקת בליווי וייעוץ לנשים שרוצות לחזור לעצמן ומעוניינות לשבור תבניות חשיבה מעכבות וחוסמות -הליווי הוא על פי תורת הנפש ביהדות,\nכדי באמת לחיות את המציאות מתוך פיוס ,ענווה ואהבה בע\"ה .\n", "category": "טיפול וייעוץ", "geographic_area": "כפר סבא", "price": "250", "type": "paid", "images": [], "provider_name": "קארין", "provider_city": "כפר סבא", "provider_phone": "", "provider_email": "karin.barshatzki@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "עיצוב גרפי", "description": "מעצבת גרפית - פוסטים, ספרים, לוגו, ועוד ", "category": "אומנות ויצירה", "geographic_area": "כפר סבא", "price": "100 ומעלה", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/4e8bcc7f9_2.mp4", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/ab0d4ea07_.mp4"], "provider_name": "קארין", "provider_city": "כפר סבא", "provider_phone": "", "provider_email": "karin.barshatzki@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "ליווי בתחום הזוגיות", "description": "עוזרת לנשים בתחום הזוגיות \n", "category": "טיפול זוגי", "geographic_area": "מושב יתד", "price": "", "type": "gift", "images": [], "provider_name": "דניאלה בוכניק", "provider_city": "מושב יתד", "provider_phone": "0545355126", "provider_email": "daniella70@walla.co.il", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "התנדבויות למען כלל ישראל", "description": "התנדבויות לדוגמא: התנדבתי באסון מירון, נפגעי הנובה, עבודה עם חיילים/שוטרים בטראומה/פוסט טראומה, התנדבות בקו רגש לנפש, קו שלום בית, התנדבות עם מקרים פרטניים/משפחתיים דרך ארגונים כמו \"קשר השותפות\" של הר' אסף פלג, נוער מתמודד ועוד...", "category": "טיפול וייעוץ", "geographic_area": "בני ברק", "price": "", "type": "gift", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/09fc63166_1002568004.jpg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/388698942_90afec75-b98f-416f-8e90-917a54e7bb28-1_all_1950.jpg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/57d5bb948_90afec75-b98f-416f-8e90-917a54e7bb28-1_all_1952.jpg"], "provider_name": "mrbd.mrbd", "provider_city": "בני ברק", "provider_phone": "0503393720", "provider_email": "mrbd.mrbd@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "סלון ספרותי ", "description": "סלון ספרותי הוא מפגש שעוסק כולו בשיח ובחיבור מרומם נפש סביב שירי משוררים ישראליים ואחרים.\nכל מפגש מוקדש לשיר של משוררת או משורר,וביחד צוללים לתובנות זכרונות רגשות שהמילים מעוררות בנו.\nוהכל באווירה נעימה קלילה ובעיקר מקרבת ומחברת בין המשתתפות.\n בוגרת תואר ומכון אדלר והנחיית קבוצות .\nואוהבת לפזר טוב \n", "category": "אומנות ויצירה", "geographic_area": "נתניה", "price": "לקבוצה עד 20 משתתפות : 500שח", "type": "paid", "images": [], "provider_name": "פרח מסרי", "provider_city": "נתניה", "provider_phone": "0507392611", "provider_email": "de.perach@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "עושים סדר כלכלי", "description": "ליווי מותאם אישית ליחידים ומשפחות דרך ניהול נכון של כסף, הסרת חסמים והתפתחות אישית באמצעות טכניקת האיזון EMF להאצת תהליכים למי שמתאים וכלים מהעולם האימונים ומגישת נלפ.", "category": "ייעוץ כלכלי", "geographic_area": "מודיעין-מכבים-רעות", "price": "", "type": "paid", "images": [], "provider_name": "גרציה דן", "provider_city": "מודיעין-מכבים-רעות", "provider_phone": "0524530177", "provider_email": "yafa.emf@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "תשובה פשוטה", "description": "מגיעים עם שאלה מה עוצר אותי ל...או למה זה קורה לי? ועוברים תהליך להסרת חסמים באמצעות קלפים בראיית הנסתר ביהדות. פרי פיתוח של הרבנית עינת מים. משחררים חסימה אנרגטית מהגוף ומקבלים פירוט למה שחוסם והנחיות כתובות לשחרור החסם ובמה להתמקד כדי להצליח ולהתקדם במה בנושא עליו נשאלה השאלה. זה טיפול בשורש הבעיה", "category": "טיפול וייעוץ", "geographic_area": "מודיעין-מכבים-רעות", "price": "585 כולל מע\"מ", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/72010e983_IMG-20221206-WA0000.jpg"], "provider_name": "גרציה דן", "provider_city": "מודיעין-מכבים-רעות", "provider_phone": "0524530177", "provider_email": "yafa.emf@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "שעת הקשבה", "description": "מציעה שעת הקשבה, בה תוכלי לשתף אותי בכל מה שעל ליבך ויחד נוכל להתבונן מחוץ לתמונה. \nבנוסף אם יש לך עניין קונקרטי הקשור במערכות יחסים, במשפחה, בעבודה (למשל סכסוך או לשפר תנאים בעבודה) אוכל לעזור להתכונן לקראת הצעד הבא. ", "category": "טיפול וייעוץ", "geographic_area": "גילת", "price": "בדאנה, כנדבת הלב ", "type": "paid", "images": [], "provider_name": "dana mesalem", "provider_city": "גילת", "provider_phone": "0506757156", "provider_email": "danamesalem@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "טיפול סאונד בקערות קריסטל ", "description": "מי שרוצה להרגיש את התקשורת עם הנשמה 45 דקות של שקט. ממוסס את קידוד הזכרונות מתוך התא , מטפל ברמה הפיזית שכן הקערות מוציאות צליל של מבנה גבישי ופועלות כקרן לייזר המאתר את המקום הזקוק לריפוי. \nלא מתאים לנשים הצורכות כדורים פסיכיאטרים ולמי שיש קוצב לב ונשים הריוניות . אפשר להכנס לאינסטגרם _Mereisha", "category": "טיפול וייעוץ", "geographic_area": "מודיעין-מכבים-רעות", "price": "400 ש״ח לשעה ", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/d5b9a9f38_IMG_7300.jpeg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/3c350a52a_IMG_1134.jpeg"], "provider_name": "שרונה דהאן", "provider_city": "מודיעין-מכבים-רעות", "provider_phone": "0584661543", "provider_email": "sh0504115922@gmail.com", "provider_instagram": "_Mereisha", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "סדנת בינה בטבע", "description": "סדנה של 3 שעות של חיבור, מתאים לגילאי 18 ומעלה, סדנה של הקשבה, נוכחות, חיבור ושקט, בטבע המופלא של הר כמון", "category": "טיפול וייעוץ", "geographic_area": "כמון", "price": "250 ש למשתתף, הנחה לקבוצות", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/60c147b29_21b87a80-a3a7-41d6-b602-9a7485c32203-1_all_262.jpg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/4302c275d_21b87a80-a3a7-41d6-b602-9a7485c32203-1_all_451.jpg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/bf7377d81_21b87a80-a3a7-41d6-b602-9a7485c32203-1_all_248.jpg"], "provider_name": "ענבל מיוחס", "provider_city": "כמון", "provider_phone": "0525455386", "provider_email": "inbalme7@gmail.com", "provider_instagram": "Inbalit8", "provider_website": "https://www.inbal-meyuhas.com/", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "בגדי נשים צנועים", "description": "בגדים צנועים, איכות וסטייל – עם משלוחים לכל הארץ 🤍", "category": "מכירה", "geographic_area": "באר שבע", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/e476704dc_IMG_8993.jpeg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/bc602445a_08b16024-f667-4017-9afc-8cffa4fa9969.jpeg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/858ff268d_IMG_8996.jpeg"], "provider_name": "שילת - לבושה בכבוד", "provider_city": "באר שבע", "provider_phone": "‭052-5155040‬", "provider_email": "shilat.dressed.in.honor@gmail.com", "provider_instagram": "Shilat_dressed_in_honor", "provider_website": "https://www.shilat-dressedinhonor.com/", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "ייעוץ מיסוי ברילוקיישן ועליה לישראל", "description": "ייעוץ, הדרכה וסיוע בתחום המיסים ליחידים וחברות ישראליות", "category": "ייעוץ כלכלי", "geographic_area": "נתניה", "price": "500 לשעת ייעוץ", "type": "paid", "images": [], "provider_name": "Keren Dayan", "provider_city": "נתניה", "provider_phone": "0506222491", "provider_email": "kerendayan1@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "רנני-תכשיטים שהם שירים", "description": "את ההשראה לתכשיטים אני מקבלת אם מתוך חלום בשינה,או מהתפעמות ממבנים ארכיטקטונים,או מחוויה נסערת ומפעימה מהטבע ,או מרעיון\nרוחני שמצוי בתוכי שתוך כדי דיאלוג עם החומר בא לידי ביטוי זה יכול להיות גם רעיון פשוט.\nהיצירה בעצם מתהווה מדיאלוג פנימי עם העולם מהחומרים החבויים בתוכי ומתהווים ליצירה.\n\nמאוד אוהבת ", "category": "אומנות ויצירה", "geographic_area": "חריש", "price": "90-900₪", "type": "paid", "images": [], "provider_name": "רונית פרץ קורן", "provider_city": "חריש", "provider_phone": "0505151545", "provider_email": "ranni467@gmail.com", "provider_instagram": "https://www.instagram.com/ranniejewelry?igsh=MW40NWcwNm4xeXJzbg%3D%3D&utm_source=qr", "provider_website": "rannie.co.il", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "מוצרים מעוצבים בתלת מימד או גרפיקה ", "description": "נטלות \"ואהבת\" בתלת מימד, תחתיות לכוסות \"ואהבת\", ברכות מעוצבות, תפילות, דפי ציור ועוד ניתן להתרשם באתר הסטודיו יוטוביה www.youtovia.com", "category": "אומנות ויצירה", "geographic_area": "הרצליה", "price": "10-200 שח", "type": "paid", "images": [], "provider_name": "Ayelet Shaviv", "provider_city": "הרצליה", "provider_phone": "0546620283", "provider_email": "ayeletshaviv@gmail.com", "provider_instagram": "youtovia & ayeletshaviv", "provider_website": "www.youtovia.com", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "סדנאות יצירה ומלאכת יד", "description": "מנחת סדנאות יצירה לנשים ונערות בהרצליה והסביבה, סדנאות הדפס, דודלינג, מלאכת יד, עיצוב בקנבה ועוד ", "category": "אומנות ויצירה", "geographic_area": "הרצליה", "price": "", "type": "paid", "images": [], "provider_name": "Ayelet Shaviv", "provider_city": "הרצליה", "provider_phone": "0546620283", "provider_email": "ayeletshaviv@gmail.com", "provider_instagram": "youtovia & ayeletshaviv", "provider_website": "www.youtovia.com", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "מרחב תרבות, רוח וחיבור לנשים ונערות ", "description": "מרחב חדש ובהרצה, מרחב תרבות, רוח ואומנות לנשים ונערות בהרצליה והסביבה🌿מחפשת נשים יוצרות, מנחות מעגלים , מרצות , סופרות שירצו להתארח במרחב בהרצליה.", "category": "אומנות ויצירה", "geographic_area": "הרצליה", "price": "", "type": "paid", "images": [], "provider_name": "Ayelet Shaviv", "provider_city": "הרצליה", "provider_phone": "0546620283", "provider_email": "ayeletshaviv@gmail.com", "provider_instagram": "youtovia & ayeletshaviv", "provider_website": "www.youtovia.com", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "מוצרים מבטון", "description": "פמוטים, עציצים, קערות, תחתיות, מגנטים, לבבות לתליה, הכל מבטון בעבודת יד.\nמתנות לחג, לימי הולדת,חנוכת בית או סתם כי כיף לתת...", "category": "אומנות ויצירה", "geographic_area": "נס ציונה", "price": "10-200", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/42ad0107c_IMG-20251027-WA0058.jpg"], "provider_name": "מאיה אברמוביץ", "provider_city": "נס ציונה", "provider_phone": " 0508810550", "provider_email": "Maya_abra2@walla.co.il", "provider_instagram": "", "provider_website": "https://levton.my.canva.site/dag3p8afam4", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "הדרכת כלה ", "description": "שמי נועה,  מדריכת כלות מוסמכת ומלוות כלות.\n\nמדריכה ומלווה כלות במסע אישי מרגעי ההכנה לחתונה עד לחיי הנישואין. \nשילוב של הלכות בנושא טהרת המשפחה, לימוד השקפתי על הבית היהודי ברוח הלימוד, וכל החלק הפרקטי של מה שזוג צריך הן מצד הגשמי והן מהצד הרוחני לקראת החתונה ולאחר מכן. \n", "category": "ייעוץ", "geographic_area": "בני ברק", "price": "", "type": "paid", "images": [], "provider_name": "noalou", "provider_city": "בני ברק", "provider_phone": "0525245414", "provider_email": "noalou1104@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "טיפולי גוף נפש ", "description": "טיפולי גוף נפש \n תת מודע  \nשיחרור אמונות מגבילות  ", "category": "טיפול וייעוץ", "geographic_area": "אחיעזר", "price": "250-350₪", "type": "paid", "images": [], "provider_name": "Rotem Mantzur", "provider_city": "אחיעזר", "provider_phone": "0506318446", "provider_email": "malimanzur65gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "ליווי ,שיחה הקשבה מהלב", "description": " ליווי שיחה,הקשבה מהלב", "category": "טיפול וייעוץ", "geographic_area": "ראשון לציון", "price": "", "type": "gift", "images": [], "provider_name": "תמר הוד", "provider_city": "ראשון לציון", "provider_phone": "0524896436", "provider_email": "5tamarhood8@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "עיסוי שוודי רפואי ", "description": "עיסוי לחזור לנוכחות בגוף לשים לב לחלקים המבקשים יחס ומגע אוהב . נשימה לנשמה \nלהטעין את האנרגיה .\nעיסוי מתבצע עם שמן בתוספת שמנים אתריים מותאמים .", "category": "טיפול", "geographic_area": "צפרירים", "price": "250", "type": "paid", "images": [], "provider_name": "Mimi Seidner", "provider_city": "צפרירים", "provider_phone": "0506744473", "provider_email": "miriamseidner7@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "עיסוי רחם מסורתי / עיסוי גוף", "description": "עיסוי רחם מסורתי , מגע עדין ועמוק (חיצוני)בהקשבה לגוף וללב \nמזמין אותך להתחבר למרכז הנשי שלך ללב השני ליצירה לעוצמה שבך ,למקדש המחזיק חיים.\n-תומך בכל אישה הרוצה לפגוש את עצמה מקרוב\n-למורכבויות סביב המחזור החודשי\n-איזון הורמונלי\n-כאבי ווסת\n-תומך באתגרי פוריות\n-ליווי הפלות\n-אנדומטריוזיס \n\nמוזמנת באהבה\n\nאפשר גם שיחת התייעצות ללא עלות על כל מה שקשור במערכת הנשית, ואפשר גם בבארטר.", "category": "טיפוח ובריאות", "geographic_area": "צפרירים", "price": "300", "type": "paid", "images": ["https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/683ed65f1113585473038f31/39d1671ce_IMG-20251027-WA0035.jpg"], "provider_name": "Mimi Seidner", "provider_city": "צפרירים", "provider_phone": "0506744473", "provider_email": "miriamseidner7@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "אימון וייעוץ אישי/זוגי ", "description": ".", "category": "טיפול וייעוץ", "geographic_area": "רמת השרון", "price": "בתשלום", "type": "paid", "images": [], "provider_name": "טליה ברמן", "provider_city": "רמת השרון", "provider_phone": "0523238867", "provider_email": "t@ilact.com", "provider_instagram": "", "provider_website": "taliaberman.com", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "מלווה להתפתחות רוחנית ", "description": "שיחת ייעוץ טלפוני של שעה להבנת המציאות הגשמית בעיניים רוחניות.", "category": "מאמנת אישית", "geographic_area": "פרדס חנה-כרכור", "price": "150 שח", "type": "paid", "images": [], "provider_name": "Anat Levy", "provider_city": "פרדס חנה-כרכור", "provider_phone": "0545219287", "provider_email": "anat.coaching@gmail.com", "provider_instagram": "", "provider_website": "https://anatmula.wixsite.com/mula", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "ספר \"מוּלה\" ", "description": "הספר \"מוּלה\" נכתב בזכות הלימודים אצל הרב שלנו, הרב אריק נווה, הזכות להכיר את פנימיות התורה וכוחה של אמונה בה' יתברך היו לי לכלים להתמודד עם מצב רפואי נדיר שהמציאות שיקפה בחיי. הריון מולארי מלא, בשמו המקוצר \"מוּלה\" הינו מסע מול ה'. בספר כלים רוחניים פרקטיים ברוח הקבלה שיעזרו לכל אדם להתמודד עם אתגר.", "category": "טיפול וייעוץ", "geographic_area": "פרדס חנה-כרכור", "price": "82שח - 100שח", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/36a4794ec_1000219917.jpg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/2d919ed3b_1000214961.png", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/2f11003e6_1000211724.jpg"], "provider_name": "Anat Levy", "provider_city": "פרדס חנה-כרכור", "provider_phone": "0545219287", "provider_email": "anat.coaching@gmail.com", "provider_instagram": "", "provider_website": "https://anatmula.wixsite.com/mula", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "יעוץ זוגי וליווי אישי", "description": ".", "category": "טיפול וייעוץ", "geographic_area": "", "price": "בתשלום", "type": "paid", "images": [], "provider_name": "", "provider_city": "", "provider_phone": "0528903439", "provider_email": "mirit2357@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "ציורים מקוריים מהנשמה", "description": "למכירה, ציורים מקוריים, בהשראת הלימוד, ציורים מהנשמה, מתאים למתנות או לעיצוב הבית", "category": "אומנות ויצירה", "geographic_area": "רמת גן", "price": "בתשלום", "type": "paid", "images": [], "provider_name": "דיקלה", "provider_city": "רמת גן", "provider_phone": "0544249866", "provider_email": "diklabenzion@gmail.com", "provider_instagram": "https://www.instagram.com/dikla_ben_zionart?igsh=MWh4aTJzMDU0dXRsdA==", "provider_website": "", "is_holiday": true, "holiday_type": "", "tags": "[]"}, {"title": "יעוץ והקשבה", "description": "אם את מרגישה שאת צריכה אוזן קשבת, יד תומכת והכלה אני כאן בשבילך🩷", "category": "טיפול וייעוץ", "geographic_area": "באר יעקב", "price": "", "type": "gift", "images": [], "provider_name": "", "provider_city": "באר יעקב", "provider_phone": "0527040949", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "ליווי אישי רגשי תודעתי להתפתחות האדם בכל תחומי החיים", "description": "הכל מתחיל מצורת חשיבה.. \nמפת מציאות פנימית. \nהבנת מבניות האדם ויצירת חשיבה מותאמת , מאפשרת בהירות ועצמאות חשיבתית בכל תחומי החיים. ", "category": "טיפול וייעוץ", "geographic_area": "", "price": "בתשלום", "type": "paid", "images": [], "provider_name": "", "provider_city": "", "provider_phone": "0507205225", "provider_email": "Miridavid43@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "הנחית הורים בגישה ההיקשרותית התפתחותית", "description": "", "category": "אחר", "geographic_area": "רחובות", "price": "בתשלום", "type": "paid", "images": [], "provider_name": "", "provider_city": "רחובות", "provider_phone": "0506286974", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "רפואה טבעית", "description": "מטפלת ברפואה טבעית - איורודה, ארומתרפיה, פרחי באך, צמחי מרפא, תזונה וטיפולי מגע. רוקחת מוצרי בריאות טבעיים", "category": "טיפול", "geographic_area": "אספר", "price": "180-320", "type": "paid", "images": [], "provider_name": "קארין אלמליח", "provider_city": "אספר", "provider_phone": "0525400893", "provider_email": "Daaboul.kareen@gmail.com", "provider_instagram": "https://www.instagram.com/kareenelmaliach?igsh=cXdsODZhMThwdHJj&utm_source=qr", "provider_website": "", "is_holiday": true, "holiday_type": "", "tags": "[]"}, {"title": "מטפלת גוף נפש", "description": "שלום אישה יקירה אני קארין מטפלת ברפואה טבעית דרך כלים שונים. אשמח להיות כאן לצידיך בהתפתחות שלך ולהגשמה פיזית ונפשית", "category": "דיקור סיני / רפואה סינית / רפואה משלימה", "geographic_area": "אספר", "price": "בתשלום", "type": "paid", "images": [], "provider_name": "קארין אלמליח", "provider_city": "אספר", "provider_phone": "0525400893", "provider_email": "Daaboul.kareen@gmail.com", "provider_instagram": "https://www.instagram.com/kareenelmaliach?igsh=cXdsODZhMThwdHJj&utm_source=qr", "provider_website": "", "is_holiday": true, "holiday_type": "", "tags": "[]"}, {"title": "לשיר למי שזקוקה לריפוי הלב", "description": "", "category": "שירה", "geographic_area": "", "price": "", "type": "gift", "images": [], "provider_name": "", "provider_city": "", "provider_phone": "0507221195", "provider_email": "Noemieaaa@gmail.com", "provider_instagram": "", "provider_website": "https://youtube.com/@noemiedeloya?si=skKE8JZVmZpyvFrp", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "שיחת יעוץ הכוללת הקשבה תמיכה וחיוך דרך הטלפון,יכול להיות גם בווצאפ אם נרצה לראות אחת את השניה", "description": "מתאים למי שיש לה ירידה במצב הרוח, שצריכה הקשבה, שמרגישה קצת לבד ורוצה אוזן קשבת ומילה טובה", "category": "אחר", "geographic_area": "", "price": "", "type": "gift", "images": [], "provider_name": "", "provider_city": "", "provider_phone": "0524748549", "provider_email": "anatam32@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "עיצוב גרפי וסדנאות יצירה", "description": "", "category": "עיצוב גרפי", "geographic_area": "", "price": "בתשלום", "type": "paid", "images": [], "provider_name": "", "provider_city": "", "provider_phone": "0535213461", "provider_email": "Dafnaweiss7@gmail.com", "provider_instagram": "", "provider_website": "https://dafnaweiss7.wixsite.com/shop", "is_holiday": false, "holiday_type": "", "tags": "[\"עצמאית\",\"אומנות\"]"}, {"title": "שיעורים פרטיים בהוראה מתקנת", "description": "שיעורים פרטיים לתלמידי כיתות א עם ו עם לקויות וקשיי למידה לעזור להם בתהליכי רכישת הקריאה והבנת הנקרא, בדגש על מקצועות השפה ( בפרדס חנה כרכור( ", "category": "מורה פרטית", "geographic_area": "פרדס חנה", "price": "150-200", "type": "paid", "images": [], "provider_name": "דניאל חכם", "provider_city": "פרדס חנה", "provider_phone": "0542307770", "provider_email": "Daniellehaham@gmail.com", "provider_instagram": "https://www.instagram.com/danielle.haham?igsh=aTgwY29kMjE4c2Z1", "provider_website": "https://daniellehaham.com/", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "שיעורי פילאטיס מזרן", "description": "שיעורי פילאטיס פרטיים, זוגיים ובקבוצות קטנות עד 5 משתתפים עבודה על חיזוק שרירי הליבה (בטן, זוקפי גב) , הארכה של השריר , שילוב גוף ונפש . \nהתשלום משתנה בהתאם לאופי השיעור אם פרטי, זוגי או קבוצתי . בפרדס חנה כרכור \n*בטווח מחיר זה הפרטי שיתקיים במיקום אצלי \nקבוצתי בקבוצה של 5 -60 לאדם.\nזוגי- 150 לאדם.", "category": "שיעורי פילאטיס", "geographic_area": "פרדס חנה", "price": "180-250", "type": "paid", "images": [], "provider_name": "דניאל חכם", "provider_city": "פרדס חנה", "provider_phone": "0542307770", "provider_email": "Daniellehaham@gmail.com", "provider_instagram": "https://www.instagram.com/danielle.haham?igsh=aTgwY29kMjE4c2Z1", "provider_website": "https://daniellehaham.com/", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "פילאטיס טיפולי ", "description": "תהליך המשלב פילאטיס ושיח רגשי על מנת לעזור לנשים רווקות שמרגשות תסכול ובדידות לחוש יותר תקווה ואמונה,  לדייק דייטים וקשרים לעבר הזוגיות😊 .\nחודשיים של פעמיים בשבוע שעה וחצי של פילאטיס ושיח ריפוי גוף נפש ורגש. לקבוצת ווטסאפ  לחיזוק https://chat.whatsapp.com/FFNHC3R40DMLCcpbXBRYKG?mode=ems_copy_c", "category": "שיעורי פילאטיס", "geographic_area": "פרדס חנה", "price": "5000 שח", "type": "paid", "images": [], "provider_name": "דניאל חכם", "provider_city": "פרדס חנה", "provider_phone": "0542307770", "provider_email": "Daniellehaham@gmail.com", "provider_instagram": "https://www.instagram.com/danielle.haham?igsh=aTgwY29kMjE4c2Z1", "provider_website": "https://daniellehaham.com/", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "מעגלי נשים", "description": "מעגלי נשים ייחודיים 😍- קחי לך זמן קבוע שעה וחצי בשבוע בהן את נפגש עם עוד נשים לחיזוק גוף-נפש-רגש. 50 דקות שיעור פילאטיס מזרן לחיזוק היציבה, השרירים, הבטחון , הרפיה לרוגע וחצי שעה של שיח אינטימי ומחבר המשלב קלפים ועוד..🥰 עד 5 נשים ומתקיים בכרכור", "category": "אחר", "geographic_area": "פרדס חנה", "price": "בתשלום", "type": "paid", "images": [], "provider_name": "דניאל חכם", "provider_city": "פרדס חנה", "provider_phone": "0542307770", "provider_email": "Daniellehaham@gmail.com", "provider_instagram": "https://www.instagram.com/danielle.haham?igsh=aTgwY29kMjE4c2Z1", "provider_website": "https://daniellehaham.com/", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "שיחות יעוץ , הכלה,, הכוונה, מפגשים", "description": "", "category": "התנדבות", "geographic_area": "אילת", "price": "", "type": "gift", "images": [], "provider_name": "", "provider_city": "אילת", "provider_phone": "+972536326606", "provider_email": "eliezerk@post.bgu.ac.il", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"טיולים\"]"}, {"title": "טיפול אישי נשי", "description": "טיפול נשי תומך ברוח היהדות ליווי וייעוץ לתקופות משבר . מתאים לנשים ולזוגות", "category": "טיפול", "geographic_area": "פרדס חנה", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/67c1c6cd6_4G0A2158.JPG"], "provider_name": "אליה מגן", "provider_city": "פרדס חנה", "provider_phone": "0549566558", "provider_email": "magnoliya@gmail.com", "provider_instagram": "", "provider_website": "https://hamatana.wixsite.com/refuah", "is_holiday": true, "holiday_type": "ראש השנה", "tags": "[\"אימון לחיים\"]"}, {"title": "הנחיית סדנאות כתיבה ברוח חכמת הקבלה", "description": "סדנאות כתיבה בזרם תודעה תרגילי הגות התבוננות וכתיבה עמוקה שמניחים ומלטפים את הלב", "category": "הוראה", "geographic_area": "פרדס חנה", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/3e02ec795_a2520db9-58af-4134-b16c-cde70b145e021.jpeg"], "provider_name": "אליה מגן", "provider_city": "פרדס חנה", "provider_phone": "0549566558", "provider_email": "magnoliya@gmail.com", "provider_instagram": "", "provider_website": "https://hamatana.wixsite.com/refuah", "is_holiday": true, "holiday_type": "ראש השנה", "tags": "[\"אימון לחיים\"]"}, {"title": "אימון זוגי ברוח חכמת הקבלה ", "description": "אימון זוגי פרטני . ליווי ויעוץ תומך לזוגות ", "category": "ייעוץ", "geographic_area": "פרדס חנה", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/bce630514_xhpuraktvcv.jpg"], "provider_name": "אליה מגן", "provider_city": "פרדס חנה", "provider_phone": "0549566558", "provider_email": "magnoliya@gmail.com", "provider_instagram": "", "provider_website": "https://hamatana.wixsite.com/refuah", "is_holiday": true, "holiday_type": "ראש השנה", "tags": "[\"אימון לחיים\"]"}, {"title": "הנחית מעגלי נשים ", "description": "הנחית מעגלי נשים וערבי נשים ", "category": "אחר", "geographic_area": "פרדס חנה", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/82debb447_2N0A1923.jpg"], "provider_name": "אליה מגן", "provider_city": "פרדס חנה", "provider_phone": "0549566558", "provider_email": "magnoliya@gmail.com", "provider_instagram": "", "provider_website": "https://hamatana.wixsite.com/refuah", "is_holiday": true, "holiday_type": "ראש השנה", "tags": "[\"אימון לחיים\"]"}, {"title": "טיפול בריברסינג", "description": "ריברסינג (Rebirthing) טיפול רגשי \"עוקף שכל\" בעזרת הנשימה. \nהטיפול כולל שיחה ולאחריה נושמים ריברסינג - נשימה מעגלית מחוברת. \nהנשימות משחררות מהשורש פחדים, כאבים, חסמים שנאגרים עם השנים בגוף ובנפש.\nמטפלת בנשים, נמצאת בפתח תקווה.", "category": "טיפול", "geographic_area": "פתח תקווה", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/c803fc71d_20250422_192109.jpg"], "provider_name": "Naama Yekutiel", "provider_city": "פתח תקווה", "provider_phone": "0506599821", "provider_email": "nammaf@gmail.com", "provider_instagram": "https://instagram.com/naama_yekutiel_baderech_lalev?utm_medium=copy_link", "provider_website": "https://baderech-lalev.com/", "is_holiday": true, "holiday_type": "", "tags": "[]"}, {"title": "מוצרים טבעיים ", "description": "מוצרים טבעיים עם שמנים אתריים לטיפול טבעי ולטיפוח. פירוט באתר, משלוחים לכל הארץ\n\nhttps://baderech-lalev.com/\n\n", "category": "בריאות", "geographic_area": "פתח תקווה", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/7dc7cba75_.jpg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/04166dbc3_two-brown-bottles-essential-oil-essence-serum-women-s-skin-care-natural-background-stone-podium-front-view_291852-972.jpg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/7ee013e0f_IMG_20241104_172034_594.webp"], "provider_name": "Naama Yekutiel", "provider_city": "פתח תקווה", "provider_phone": "0506599821", "provider_email": "nammaf@gmail.com", "provider_instagram": "https://instagram.com/naama_yekutiel_baderech_lalev?utm_medium=copy_link", "provider_website": "https://baderech-lalev.com/", "is_holiday": true, "holiday_type": "", "tags": "[]"}, {"title": "פגישה אישית", "description": "פגישה אישית ממוקדת, \nתהליכי עומק משני מציאות, ברוח תורה וקבלה.\nמלמדת כלים מעשיים לריפוי עצמי עצמאי (תודעה-רגש-מעשה).\n\nלדיוק הייעוד והגשמתו\nלמימוש עצמי\nלמימוש זוגיות\nלשלום בית\nתקשורת בריאה מקרבת\nשיחרור דפוסים ותבניות\nלאהוב את עצמי\nלהתמודד עם קושי, בקלות\nלהיות בשמחה!\n\nבלב שלם | מראות ושלום פנימי", "category": "טיפול", "geographic_area": "חריש", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/b4e04219f_20251028_162512.jpg"], "provider_name": "BeLevShalem", "provider_city": "חריש", "provider_phone": "054.4789478", "provider_email": "belevshalem8@gmail.com", "provider_instagram": "", "provider_website": "https://www.facebook.com/profile.php?id=61557774523147", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "מעגל נשי - קבוצתי", "description": "פורמט מנוי חודשי (הצטרפות בתחילת כל חודש).\nמנחה ומלמדת את העבודה הפנימית ברוח התורה והיהדות, ועבודת החגים והמועדים.\nתהליכים עמוקים בחגי תשרי וספירת העומר\n\nמידי שבוע אונליין, למעגל נשי\nאחת לחודש במפגש פנים אל פנים (פיזי בחריש או אצלכן)\n\nעבודת מראות, שלום פנימי, איחוי הלב\n\n*ניתן להזמין אותי לערב הנחיה", "category": "טיפול", "geographic_area": "חריש", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/e12a50917_IMG-20251104-WA0044.jpg"], "provider_name": "BeLevShalem", "provider_city": "חריש", "provider_phone": "054.4789478", "provider_email": "belevshalem8@gmail.com", "provider_instagram": "", "provider_website": "https://www.facebook.com/profile.php?id=61557774523147", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "מתנה מהסרטים", "description": "עריכת ווידאו לפרטי / עסקי -->>.  Avatar- Ai\nלהפוך תמונות/ חלומות/ רעיונות לחיים.\nפה מתחיל הקסםםםם ....", "category": "עריכת וידאו", "geographic_area": "ראשון לציון", "price": "החל מ 450 ש״ח.", "type": "paid", "images": [], "provider_name": "dana horev", "provider_city": "ראשון לציון", "provider_phone": "0542225971", "provider_email": "danahorev@gmail.com", "provider_instagram": "https://www.instagram.com/the_dreamcaster/", "provider_website": "https://www.instagram.com/the_dreamcaster/", "is_holiday": true, "holiday_type": "", "tags": "[]"}, {"title": "קידום עסקי בווידאו- כרטיס ביקור וויזואלי לעסק", "description": "כבעלי עסקים, כולנו רוצים להגדיל חשיפה ללקוחות פוטנציאליים — אבל לא תמיד ברור איך, ובטח לא עם תקציב מוגבל.\nהרשתות החברתיות הן כלי חשיפה יעיל, זמין וזול, וכל מה שצריך הוא סרטון חכם, טיזרי ומזמין — כזה שעוצר את הצופה וגורם לו לחפש דווקא אתכם.\nרוצים לאחל לקהל לקוחתכם מזל טוב/ חג שמח וכו׳.. \nצרו קשר ", "category": "וידאו", "geographic_area": "ראשון לציון", "price": "", "type": "gift", "images": [], "provider_name": "dana horev", "provider_city": "ראשון לציון", "provider_phone": "0542225971", "provider_email": "danahorev@gmail.com", "provider_instagram": "https://www.instagram.com/the_dreamcaster/", "provider_website": "https://www.instagram.com/the_dreamcaster/", "is_holiday": true, "holiday_type": "", "tags": "[]"}, {"title": "טיפול ics - קרניוסקראל משולב אוסטיאופתיה", "description": "טיפול בשיטת ics\nics הוא טיפול שפונה לגוף הפיזי. \nהטיפול בשיטת מבוסס על ידע אנטומי מעמיק של כל מערכות הגוף (מערכת פאציאלית, מערכת החיסון, מערכת העיכול, מערכת הורמונלית, מערכת הנשימה, מערכת שלד-שריר, מערכת הדם ומערכת העצבים פריפריאלית ומרכזית- המוח), והקשרים בין המערכות. \n", "category": "עיסוי", "geographic_area": "קרית אתא", "price": "300", "type": "paid", "images": [], "provider_name": "עינבר כהן", "provider_city": "קרית אתא", "provider_phone": "0548178688", "provider_email": "inbarhazan27@gmail.com", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "חנות קריסטלים ומינרלים ", "description": "הוויה ג׳מס – Havaya Gems ✨\nמותג שנולד מתוך אהבה לקריסטלים ולריפוי אנרגטי, המחבר בין אנרגיית האדמה לאור האלוקי. כל אבן נבחרת בקפידה ונושאת בתוכה תדר של איזון, ריפוי וחיבור לבורא עולם.\nהוויה ג׳מס מזמינה אותך לעצור, לנשום, ולהיזכר באור שבתוכך – דרך הקריסטלים, הכוונה והתפילה.", "category": "מוצרי נוי", "geographic_area": "בת ים", "price": "", "type": "paid", "images": ["https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/bd3567925_2D93448E-6DF0-4135-8B5F-E155820D16D1.jpeg", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/fa36d120a_125E77F7-1FF6-4ACF-BADA-504C0D16A526.png", "https://base44.app/api/apps/683ed65f1113585473038f31/files/public/683ed65f1113585473038f31/42d54edff_IMG_1093.jpeg"], "provider_name": "Gemma Silver loya (Gem)", "provider_city": "בת ים", "provider_phone": "0506716163", "provider_email": "Gem5586@gmail.com", "provider_instagram": "Havaya_gems", "provider_website": "https://market.marmelada.co.il/havaya-gems/", "is_holiday": false, "holiday_type": "", "tags": "[]"}, {"title": "טיפול בדיקור סיני ורפלקסולוגיה", "description": "טיפול לנשים ונערות.\nבפגישה הראשונה, לפני הטיפול, אנחנו עושות תשאול מקיף על כל מערכות הגוף + אבחנת דופק ולשון, מגיעות לאבחנה ומתחילות בטיפול שמטרתו להוביל אותך לאיזון, לטפל גם בבעיה וגם בשורש שגרם לבעיה..\nמשך הפגישה היא כשעה ורבע.", "category": "טיפוח ובריאות", "geographic_area": "חולון", "price": "300 ש\"ח", "type": "paid", "images": [], "provider_name": "MALI DVIR", "provider_city": "חולון", "provider_phone": "0545662116", "provider_email": "malidvir1@gmail.com", "provider_instagram": "https://www.instagram.com/mali_dvir_tcm_reflexology?igsh=MTBxemR2d2ttd3p1", "provider_website": "www.malidvir.co.il", "is_holiday": true, "holiday_type": "ראש השנה", "tags": "[]"}, {"title": "רפלקסולוגיה", "description": "הטיפול מתאים גם בטיפול הוליסטי בתוך סדרת טיפולים וגם כשובר מתנה לימי הולדת, חגים וכו...\nמשך הפגישה כשעה ורבע.\nהטיפול הוא עיסוי בכף הרגל על פי המפה הרפלקסולוגית ויכול לעזור באיזון הורמונלי, כאבי מחזור, מיגרנות, כאב אורטופדי, בעיות עיול ונשימה, הרגעה והפחתת סטרס ועוד...\n", "category": "טיפוח ובריאות", "geographic_area": "חולון", "price": "300 ש\"ח", "type": "paid", "images": [], "provider_name": "MALI DVIR", "provider_city": "חולון", "provider_phone": "0545662116", "provider_email": "malidvir1@gmail.com", "provider_instagram": "https://www.instagram.com/mali_dvir_tcm_reflexology?igsh=MTBxemR2d2ttd3p1", "provider_website": "www.malidvir.co.il", "is_holiday": true, "holiday_type": "ראש השנה", "tags": "[]"}, {"title": "תהליך בשיטת מסע", "description": "תהליך בשיטת המסע של ברנדון בייס\nתהליך עומק רגשי ותודעתי למציאת והבנת השורש לקושי שאנו חשים. \nהבנת השורש פותחת את התודעה לקבלה סליחה ומשחררת את האחיזה בסיפור. מאפשרת לנו להמשיך בדרך בלי משקולות העבר.\nהתהליך מתאים למגוון רב של קשיים גופניים ונפשיים.", "category": "טיפול וייעוץ", "geographic_area": "ראשון לציון", "price": "720 לתהליך של שעתיים", "type": "paid", "images": [], "provider_name": "גלייה לדעת בלב", "provider_city": "ראשון לציון", "provider_phone": "0526615377", "provider_email": "gagalilleo@gmail.com", "provider_instagram": "galforman", "provider_website": "Gal-ya.co.il", "is_holiday": true, "holiday_type": "ראש השנה", "tags": "[]"}, {"title": "אימון וליווי רגשי תודעתי", "description": "אימון וליווי רגשי תודעתי. מקבלת ברמת השרון ובזום.", "category": "טיפול וייעוץ", "geographic_area": "רמת השרון", "price": "", "type": "", "images": [], "provider_name": "קרן ברוכיאל", "provider_city": "רמת השרון", "provider_phone": "0523523505", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "מטפלת רגשית לנשים", "description": "מטפלת רגשית לנשים. מטפלת בגדרה או בזום.", "category": "טיפול", "geographic_area": "גדרה", "price": "", "type": "", "images": [], "provider_name": "ריחן שוב", "provider_city": "גדרה", "provider_phone": "0543530367", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "מלווה נשים לאורח חיים בריא ברוח עין הבדולח", "description": "מלווה נשים לאורח חיים בריא ברוח עין הבדולח. מקבלת בבת עין ובזום.", "category": "טיפוח ובריאות", "geographic_area": "בת עין", "price": "", "type": "", "images": [], "provider_name": "טופז להב", "provider_city": "בת עין", "provider_phone": "0526584172", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "ליווי בתהליכי ריפוי ותמיכה לנשים", "description": "ליווי בתהליכי ריפוי ותמיכה לנשים. מקבלת בפתח תקווה ובזום.", "category": "טיפול", "geographic_area": "פתח תקווה", "price": "", "type": "", "images": [], "provider_name": "בת אל לינדר", "provider_city": "פתח תקווה", "provider_phone": "0547788227", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "מטפלת רגשית לנשים, דולה ומלווה נשים", "description": "מטפלת רגשית לנשים, דולה ומלווה נשים. מקבלת באלפי מנשה ובזום.", "category": "טיפול", "geographic_area": "אלפי מנשה", "price": "", "type": "", "images": [], "provider_name": "מאלי קאליש", "provider_city": "אלפי מנשה", "provider_phone": "0523648008", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "מלווה נשים וזוגות לחיבור רגשי ושלום פנימי", "description": "מלווה נשים וזוגות לחיבור רגשי ושלום פנימי. מקבלת בראשון לציון / זום.", "category": "טיפול זוגי", "geographic_area": "ראשון לציון", "price": "", "type": "", "images": [], "provider_name": "רות בן שבת", "provider_city": "ראשון לציון", "provider_phone": "0547979725", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "עובדת סוציאלית ומטפלת בטבע", "description": "עובדת סוציאלית ומטפלת בטבע. מקבלת במצפה נטופה בגליל.", "category": "טיפול", "geographic_area": "מצפה נטופה", "price": "", "type": "", "images": [], "provider_name": "סיגלית מלכה", "provider_city": "מצפה נטופה", "provider_phone": "0522314225", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "מלווה נשים", "description": "מלווה נשים. מקבלת ברמלה ובזום.", "category": "טיפול וייעוץ", "geographic_area": "רמלה", "price": "", "type": "", "images": [], "provider_name": "רינת בן סימון", "provider_city": "רמלה", "provider_phone": "0542141056", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "עו\"סית קלינית - טיפול בטראומה ומדריכת הורים", "description": "עו\"סית קלינית - טיפול בטראומה ומדריכת הורים. זום בלבד.", "category": "טיפול", "geographic_area": "אונליין (זום)", "price": "", "type": "", "images": [], "provider_name": "חיה עזריה", "provider_city": "אונליין (זום)", "provider_phone": "0544996626", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "מלווה ומטפלת בנשים", "description": "מלווה ומטפלת בנשים. מקבלת בקדומים ובזום.", "category": "טיפול", "geographic_area": "קדומים", "price": "", "type": "", "images": [], "provider_name": "מאייה בלנגה", "provider_city": "קדומים", "provider_phone": "0528334843", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "ליווי רוחני לנשים", "description": "ליווי רוחני לנשים.", "category": "טיפול וייעוץ", "geographic_area": "", "price": "", "type": "", "images": [], "provider_name": "הילה הדסה ברוך", "provider_city": "", "provider_phone": "0506993312", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "ייעוץ וליווי לנשים ומשפחות, הכנה להורות מודעת", "description": "ייעוץ וליווי לנשים ומשפחות, הכנה להורות מודעת. מפגשים בזום.", "category": "ייעוץ", "geographic_area": "אונליין (זום)", "price": "", "type": "", "images": [], "provider_name": "כלנית פילו", "provider_city": "אונליין (זום)", "provider_phone": "0542440112", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "תומכת ומלווה תהליכים לריפוי וצמיחה", "description": "תומכת ומלווה תהליכים לריפוי וצמיחה. מקבלת בגליל ובזום.", "category": "טיפול", "geographic_area": "גליל", "price": "", "type": "", "images": [], "provider_name": "תמר ברוכיאל זהר", "provider_city": "גליל", "provider_phone": "0523782253", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}, {"title": "מלווה נשים לעצמאות אישית ועסקית", "description": "מלווה נשים לעצמאות אישית ועסקית.", "category": "מאמנת אישית", "geographic_area": "", "price": "", "type": "", "images": [], "provider_name": "אביניל בוזגלו", "provider_city": "", "provider_phone": "0544485516", "provider_email": "", "provider_instagram": "", "provider_website": "", "is_holiday": false, "holiday_type": "", "tags": "[\"ברוח חכמת הקבלה\"]"}];
+    // ---------- Smart search ----------
+    const TYPE_LABELS = { paid: 'בתשלום', gift: 'מתנה / ללא תשלום', barter: 'בארטר' };
+    const TYPE_WORDS = { paid: 'בתשלום', gift: 'מתנה חינם ללא תשלום', barter: 'בארטר החלפה' };
+    const CATEGORY_GROUPS = [
+      { name: 'טיפול ורגש', cats: ['טיפול וייעוץ', 'טיפול', 'טיפול זוגי', 'ייעוץ', 'מאמנת אישית'] },
+      { name: 'גוף ובריאות', cats: ['טיפוח ובריאות', 'בריאות', 'עיסוי', 'דיקור סיני / רפואה סינית / רפואה משלימה', 'שיעורי פילאטיס'] },
+      { name: 'אומנות, יצירה ומוצרים', cats: ['אומנות ויצירה', 'מכירה', 'מוצרי נוי', 'שירה'] },
+      { name: 'כלכלה', cats: ['ייעוץ כלכלי'] },
+      { name: 'עיצוב ווידאו', cats: ['עיצוב גרפי', 'עריכת וידאו', 'וידאו'] },
+      { name: 'לימוד והוראה', cats: ['מורה פרטית', 'הוראה'] },
+      { name: 'התנדבות ואחר', cats: ['התנדבות', 'אחר'] }
+    ];
+    const FALLBACK_GROUP = 'התנדבות ואחר';
+    const AREA_ALIASES = { 'פרדס חנה-כרכור': 'פרדס חנה' };
+    const ONLINE = 'אונליין / זום';
+    const REGIONS = {
+      'צפון וחיפה': ['פרדס חנה', 'חריש', 'קרית ים', 'קרית אתא', 'כמון', 'מצפה נטופה', 'גליל'],
+      'שרון': ['הרצליה', 'כפר סבא', 'רעננה', 'נתניה', 'רמת השרון'],
+      'מרכז': ['ראשון לציון', 'חולון', 'בת ים', 'פתח תקווה', 'בני ברק', 'רמת גן', 'נס ציונה', 'באר יעקב', 'רחובות', 'גדרה', 'רמלה', 'אחיעזר', 'מודיעין-מכבים-רעות'],
+      'ירושלים והסביבה': ['צפרירים'],
+      'יהודה ושומרון': ['אספר', 'בת עין', 'אלפי מנשה', 'קדומים'],
+      'דרום': ['באר שבע', 'אילת', 'גילת', 'מושב יתד', 'שפיר']
+    };
+    const regionOf = a => a === 'אונליין (זום)' ? ONLINE : (Object.keys(REGIONS).find(r => REGIONS[r].includes(a)) || '');
+    const ONLINE_RE = /זום|zoom|אונליין|און ליין|online|טלפוני|דרך הטלפון|וידאו/i;
+    const QUICK_SEARCHES = ['אימון אישי', 'זוגיות', 'עיסוי', 'ייעוץ כלכלי', 'יצירה', 'מעגלי נשים', 'מתנה'];
+    const STOPWORDS = new Set(['של', 'עם', 'את', 'על', 'או', 'גם', 'אני', 'מחפשת', 'מחפש', 'מחפשות', 'צריכה', 'צריך',
+      'רוצה', 'אשמח', 'באזור', 'אזור', 'ליד', 'עבור', 'בשביל', 'משהו', 'מישהי', 'שירותים', 'יש', 'אפשר', 'מי', 'מה', 'איפה', 'לי']);
+    const SYNONYM_GROUPS = [
+      ['ייעוץ', 'יועצת', 'התייעצות', 'להתייעץ', 'ייעוצי'],
+      ['זוגיות', 'זוגי', 'זוג', 'נישואין', 'זוגית'],
+      ['עיסוי', 'מסאז', 'מסאג', 'massage'],
+      ['טיפול', 'מטפלת', 'טיפולי', 'טיפולים', 'תרפיה', 'therapy'],
+      ['רגשי', 'רגש', 'רגשות', 'נפש', 'נפשי'],
+      ['אימון', 'מאמנת', 'קואצינג', 'coaching', 'אימונים'],
+      ['כלכלה', 'כלכלי', 'כלכלית', 'כסף', 'תקציב', 'פיננסי', 'חובות', 'מיסוי', 'כספים'],
+      ['הורים', 'הורות', 'ילדים', 'חינוך', 'ילד'],
+      ['תכשיטים', 'תכשיט', 'שרשרת', 'שרשראות', 'עגילים'],
+      ['בגדים', 'ביגוד', 'לבוש', 'אופנה'],
+      ['פילאטיס', 'pilates', 'התעמלות', 'כושר', 'ספורט'],
+      ['דיקור', 'אקופונקטורה', 'סינית'],
+      ['מתנה', 'חינם', 'בחינם', 'התנדבות', 'gift'],
+      ['וידאו', 'סרטון', 'סרטונים', 'צילום', 'video'],
+      ['עיצוב', 'גרפיקה', 'גרפי', 'לוגו', 'design'],
+      ['שיעורים', 'שיעור', 'מורה', 'הוראה', 'לימוד', 'לימודים'],
+      ['נשים', 'נשי', 'נשית', 'נשיות'],
+      ['כלה', 'כלות', 'חתונה'],
+      ['הקשבה', 'שיחה', 'שיחות', 'תמיכה', 'הכלה'],
+      ['קבלה', 'רוחני', 'רוחניות', 'רוחנית'],
+      ['סרטן', 'אונקולוגי', 'קנסר'],
+      ['משפטי', 'עורכת', 'עוד', 'הסכם', 'הסכמים', 'גישור', 'משפט'],
+      ['אונליין', 'זום', 'zoom', 'מרחוק', 'online'],
+      ['יצירה', 'אומנות', 'אמנות', 'סדנה', 'סדנאות', 'יצירתי'],
+      ['כרכור', 'פרדס'],
+      ['מודיעין', 'מכבים', 'רעות']
+    ];
+    const FIELD_WEIGHTS = { title: 10, category: 6, provider: 5, area: 4, description: 2, extra: 1 };
+    const PREFIXES = ['וה', 'שה', 'מה', 'לה', 'בה', 'כש', 'וב', 'ול', 'ומ', 'וש', 'ה', 'ו', 'ב', 'ל', 'מ', 'ש', 'כ'];
+    const WORD_RE = /([\p{L}\p{N}"'״׳\u0591-\u05BD\u05BF-\u05C7]+)/u;
+    const FINALS = { 'ך': 'כ', 'ם': 'מ', 'ן': 'נ', 'ף': 'פ', 'ץ': 'צ' };
+
+    function norm(str) {
+      return String(str || '').toLowerCase()
+        .replace(/\u05BE/g, ' ')
+        .replace(/[\u0591-\u05BD\u05BF-\u05C7]/g, '')
+        .replace(/[ךםןףץ]/g, c => FINALS[c])
+        .replace(/["'`״׳]/g, '')
+        .replace(/[^\p{L}\p{N}]+/gu, ' ')
+        .trim();
+    }
+    const loose = w => w.length > 1 ? w[0] + w.slice(1).replace(/[וי]/g, '') : w;
+    const words = str => norm(str).split(' ').filter(Boolean);
+    const esc = str => String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    function editDistance(a, b) {
+      const dp = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+      for (let j = 1; j <= b.length; j++) dp[0][j] = j;
+      for (let i = 1; i <= a.length; i++)
+        for (let j = 1; j <= b.length; j++)
+          dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      return dp[a.length][b.length];
+    }
+
+    const SYN = new Map();
+    SYNONYM_GROUPS.forEach(g => {
+      const ws = g.map(norm);
+      ws.forEach(w => SYN.set(loose(w), [...new Set([...(SYN.get(loose(w)) || []), ...ws])]));
+    });
+
+    const groupOf = cat => (CATEGORY_GROUPS.find(g => g.cats.includes(cat)) || { name: FALLBACK_GROUP }).name;
+    const areaOf = s => { const a = (s.geographic_area || s.provider_city || '').trim(); return AREA_ALIASES[a] || a; };
+
+    function parseTags(tags) {
+      if (Array.isArray(tags)) return tags;
+      try { const v = JSON.parse(tags || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+    }
+    document.getElementById('totalCount').textContent = services.length;
+
+    const PROVIDER_COUNT = {};
+    const VOCAB = new Set();
+    services.forEach((s, i) => {
+      s._i = i;
+      s._group = groupOf(s.category);
+      s._area = areaOf(s);
+      s._pkey = (s.provider_phone || '').replace(/\D/g, '').slice(-9) || (s.provider_email || '').toLowerCase() || s.provider_name || 'i' + i;
+      PROVIDER_COUNT[s._pkey] = (PROVIDER_COUNT[s._pkey] || 0) + 1;
+      s._regions = [regionOf(s._area)].filter(Boolean);
+      if (!s._regions.includes(ONLINE) && ONLINE_RE.test([s.title, s.description, s.geographic_area].join(' '))) s._regions.push(ONLINE);
+      const fields = {
+        title: s.title,
+        category: [s.category, s._group, ...parseTags(s.tags)].join(' '),
+        provider: s.provider_name,
+        area: [s.geographic_area, s.provider_city].join(' '),
+        description: s.description,
+        extra: [s.price, TYPE_WORDS[s.type], s.is_holiday ? 'חג ' + (s.holiday_type || '') : ''].join(' ')
+      };
+      s._fields = Object.entries(fields).map(([k, v]) => {
+        const ws = words(v);
+        if (k !== 'extra') ws.forEach(w => { if (w.length >= 3) VOCAB.add(w); });
+        return { w: FIELD_WEIGHTS[k], words: ws, loose: ws.map(loose) };
+      });
+      s._titleNorm = norm(s.title);
+    });
+    SYNONYM_GROUPS.flat().forEach(w => VOCAB.add(norm(w)));
+
+    function parseQuery(q) {
+      return words(q).filter(t => (t.length >= 2 && !STOPWORDS.has(t)) || /^\d+$/.test(t));
+    }
+
+    function expandToken(q) {
+      const list = [{ t: q, f: 1, strong: true }];
+      PREFIXES.forEach(p => { if (q.startsWith(p) && q.length - p.length >= 3) list.push({ t: q.slice(p.length), f: 0.85 }); });
+      list.slice().forEach(c => (SYN.get(loose(c.t)) || []).forEach(s => { if (s !== c.t) list.push({ t: s, f: 0.7 }); }));
+      return list.map(c => ({ ...c, lt: loose(c.t) }));
+    }
+
+    const fieldHasPrefix = (w, t) => { const i = w.indexOf(t); return i > 0 && PREFIXES.includes(w.slice(0, i)); };
+    function fuzzyClose(t, w) {
+      const max = t.length >= 7 ? 2 : 1;
+      return Math.min(editDistance(t, w), editDistance(t, w.slice(0, t.length)), editDistance(t, w.slice(0, t.length + 1)),
+        editDistance(loose(t), loose(w))) <= max;
+    }
+    function matchLevel(c, w, lw, fuzzy) {
+      if (w === c.t) return 1;
+      if (lw === c.lt && c.lt.length >= 2) return 0.9;
+      if (c.t.length >= 2 && w.startsWith(c.t)) return 0.85;
+      if (c.lt.length >= 3 && lw.startsWith(c.lt)) return 0.75;
+      if (c.t.length >= 3 && fieldHasPrefix(w, c.t)) return 0.7 * (c.strong ? 1 : 0.9);
+      if (fuzzy && c.strong && c.t.length >= 4 && fuzzyClose(c.t, w)) return 0.4;
+      return 0;
+    }
+
+    function tokenScore(s, cands, fuzzy) {
+      let best = 0;
+      const hits = [];
+      s._fields.forEach(f => f.words.forEach((w, i) => {
+        cands.forEach(c => {
+          const lv = matchLevel(c, w, f.loose[i], fuzzy);
+          if (lv) { best = Math.max(best, lv * c.f * f.w); hits.push(w); }
+        });
+      }));
+      return { score: best, hits };
+    }
+
+    function closestWord(t) {
+      let best = null, bestD = t.length >= 6 ? 3 : 2;
+      VOCAB.forEach(v => {
+        if (Math.abs(v.length - t.length) > 2) return;
+        const d = editDistance(t, v);
+        if (d < bestD) { bestD = d; best = v; }
+      });
+      return best;
+    }
+
+    const AREA_PHRASES = [];
+    function detectArea(tokens) {
+      for (const ap of AREA_PHRASES) {
+        for (let i = 0; i + ap.ws.length <= tokens.length; i++) {
+          const ok = ap.ws.every((w, k) => tokens[i + k] === w || (k === 0 && PREFIXES.some(p => tokens[i] === p + w)));
+          if (ok) return { area: ap.area, ws: ap.ws, rest: tokens.slice(0, i).concat(tokens.slice(i + ap.ws.length)) };
+        }
+      }
+      return null;
+    }
+
+    function searchServices(tokens) {
+      const none = { mode: 'all', didYouMean: null, area: null };
+      if (!tokens.length) return { ...none, results: services.map(s => ({ s, score: 0, hits: [] })) };
+      const det = detectArea(tokens);
+      const textTokens = det ? det.rest : tokens;
+      const inArea = s => !det || s._area === det.area || norm(s.provider_city) === norm(det.area) || s._regions.includes(det.area);
+      const areaHits = det ? det.ws : [];
+      if (!textTokens.length) {
+        return { ...none, mode: 'and', area: det.area, results: services.filter(inArea).map(s => ({ s, score: 0, hits: areaHits })) };
+      }
+      const expanded = textTokens.map(expandToken);
+      const fuzzyFlags = expanded.map(c => !services.some(s => tokenScore(s, c, false).score > 0));
+      const scored = services.map(s => {
+        let score = 0, matched = 0;
+        const hits = [];
+        expanded.forEach((c, k) => {
+          const r = tokenScore(s, c, fuzzyFlags[k]);
+          if (r.score) { score += r.score; matched++; hits.push(...r.hits); }
+        });
+        if (textTokens.length > 1 && s._titleNorm.includes(textTokens.join(' '))) score += 15;
+        return { s, score, matched, hits };
+      });
+      const all = r => r.matched === textTokens.length;
+      let mode = 'and';
+      let results = scored.filter(r => all(r) && inArea(r.s)).map(r => ({ ...r, hits: r.hits.concat(areaHits) }));
+      if (!results.length && det) {
+        results = scored.filter(all);
+        if (results.length) mode = 'noarea';
+      }
+      if (!results.length && textTokens.length > 1) {
+        mode = 'partial';
+        results = scored.filter(r => r.matched > 0).map(r => ({ ...r, score: r.score + r.matched * 100 + (inArea(r.s) ? 50 : 0) }));
+      }
+      results.sort((a, b) => b.score - a.score || a.s._i - b.s._i);
+      let didYouMean = null;
+      if (fuzzyFlags.some(Boolean)) {
+        const fixed = textTokens.map((t, k) => (fuzzyFlags[k] && closestWord(t)) || t);
+        if (fixed.join(' ') !== textTokens.join(' ')) didYouMean = fixed.join(' ') + (det ? ' ב' + det.area : '');
+      }
+      return { results, mode, didYouMean, area: det && det.area };
+    }
+
+    // ---------- UI ----------
+    const state = { query: '', group: 'all', region: '', area: '', type: '' };
+    const $ = id => document.getElementById(id);
+    const input = $('searchInput'), suggestBox = $('suggestions'), clearBtn = $('clearBtn');
+    const areaSelect = $('areaFilter'), typeSelect = $('typeFilter');
+
+    const categoryFilters = $('categoryFilters');
+    const groupButtons = {};
+    [{ name: 'all', label: 'הכל' }, ...CATEGORY_GROUPS.map(g => ({ name: g.name, label: g.name }))].forEach(g => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'filter-btn' + (g.name === 'all' ? ' active' : '');
+      btn.innerHTML = esc(g.label) + ' <span class="n"></span>';
+      btn.onclick = () => { state.group = g.name; render(); };
+      categoryFilters.appendChild(btn);
+      groupButtons[g.name] = btn;
+    });
+
+    const areaCounts = {};
+    services.forEach(s => { if (s._area) areaCounts[s._area] = (areaCounts[s._area] || 0) + 1; });
+    const regionFilters = $('regionFilters');
+    const regionButtons = {};
+    [['', 'כל הארץ'], ...Object.keys(REGIONS).map(r => [r, r]), [ONLINE, ONLINE]].forEach(([r, label]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'filter-btn';
+      btn.innerHTML = esc(label) + ' <span class="n"></span>';
+      btn.onclick = () => { state.region = state.region === r ? '' : r; state.area = ''; render(); };
+      regionFilters.appendChild(btn);
+      regionButtons[r] = btn;
+    });
+    function fillCities() {
+      while (areaSelect.options.length > 1) areaSelect.remove(1);
+      const cities = REGIONS[state.region] || [];
+      cities.filter(a => areaCounts[a]).sort((a, b) => a.localeCompare(b, 'he'))
+        .forEach(a => areaSelect.add(new Option(a + ' (' + areaCounts[a] + ')', a)));
+      areaSelect.hidden = areaSelect.options.length <= 2;
+    }
+    Object.entries(TYPE_LABELS).forEach(([k, v]) => {
+      const n = services.filter(s => s.type === k).length;
+      if (n) typeSelect.add(new Option(v + ' (' + n + ')', k));
+    });
+    Object.keys(areaCounts).forEach(a => AREA_PHRASES.push({ area: a, ws: words(a) }));
+    Object.entries(AREA_ALIASES).forEach(([k, v]) => AREA_PHRASES.push({ area: v, ws: words(k) }));
+    [...Object.keys(REGIONS), ONLINE].forEach(r => AREA_PHRASES.push({ area: r, ws: words(r) }));
+    AREA_PHRASES.push({ area: 'צפון וחיפה', ws: words('צפון') }, { area: 'צפון וחיפה', ws: words('חיפה') }, { area: 'ירושלים והסביבה', ws: words('ירושלים') });
+    AREA_PHRASES.sort((a, b) => b.ws.length - a.ws.length);
+    areaSelect.onchange = () => { state.area = areaSelect.value; render(); };
+    typeSelect.onchange = () => { state.type = typeSelect.value; render(); };
+
+    $('quickChips').innerHTML = QUICK_SEARCHES.map(q => `<button type="button" class="quick-chip">${esc(q)}</button>`).join('');
+    $('quickChips').onclick = e => { if (e.target.classList.contains('quick-chip')) setQuery(e.target.textContent); };
+
+    function setQuery(q) {
+      input.value = q;
+      state.query = q;
+      hideSuggestions();
+      render();
+    }
+
+    function resetAll() {
+      Object.assign(state, { query: '', group: 'all', region: '', area: '', type: '' });
+      input.value = '';
+      render();
+    }
+    $('resetAll').onclick = resetAll;
+    clearBtn.onclick = () => { setQuery(''); input.focus(); };
+
+    function passes(s, ignoreGroup, ignoreRegion) {
+      return (ignoreGroup || state.group === 'all' || s._group === state.group) &&
+        (ignoreRegion || !state.region || s._regions.includes(state.region)) &&
+        (ignoreRegion || !state.area || s._area === state.area) &&
+        (!state.type || s.type === state.type);
+    }
+
+    function highlight(text, hitSet) {
+      if (!hitSet.size) return esc(text);
+      return String(text || '').split(WORD_RE)
+        .map((p, i) => (i % 2 && hitSet.has(norm(p))) ? '<mark>' + esc(p) + '</mark>' : esc(p)).join('');
+    }
+
+    function render() {
+      const tokens = parseQuery(state.query);
+      const { results, mode, didYouMean, area } = searchServices(tokens);
+
+      const groupCounts = { all: 0 };
+      results.forEach(r => { if (passes(r.s, true)) { groupCounts.all++; groupCounts[r.s._group] = (groupCounts[r.s._group] || 0) + 1; } });
+      Object.entries(groupButtons).forEach(([name, btn]) => {
+        const n = groupCounts[name] || 0;
+        btn.querySelector('.n').textContent = '(' + n + ')';
+        btn.classList.toggle('active', state.group === name);
+        btn.classList.toggle('empty', n === 0 && state.group !== name);
+      });
+
+      const filtered = results.filter(r => passes(r.s, false));
+      const anyFilter = state.query.trim() || state.group !== 'all' || state.region || state.area || state.type;
+      $('serviceCount').textContent = !anyFilter
+        ? 'מציג את כל ' + services.length + ' השירותים'
+        : 'נמצאו ' + filtered.length + ' שירותים' + (state.query.trim() ? ' עבור "' + state.query.trim() + '"' : '');
+      $('resetAll').hidden = !anyFilter;
+      clearBtn.hidden = !state.query;
+      $('quickChips').hidden = !!state.query.trim();
+      const regionCounts = { '': 0 };
+      results.forEach(r => { if (passes(r.s, false, true)) { regionCounts['']++; r.s._regions.forEach(g => regionCounts[g] = (regionCounts[g] || 0) + 1); } });
+      Object.entries(regionButtons).forEach(([r, btn]) => {
+        const n = regionCounts[r] || 0;
+        btn.querySelector('.n').textContent = '(' + n + ')';
+        btn.classList.toggle('active', state.region === r);
+        btn.classList.toggle('empty', n === 0 && state.region !== r);
+      });
+      fillCities();
+      areaSelect.value = state.area; areaSelect.classList.toggle('on', !!state.area);
+      typeSelect.value = state.type; typeSelect.classList.toggle('on', !!state.type);
+
+      const hint = $('searchHint');
+      hint.innerHTML = '';
+      if (didYouMean) {
+        hint.innerHTML = 'האם התכוונת ל: <button type="button" class="link-btn">' + esc(didYouMean) + '</button>?';
+        hint.querySelector('button').onclick = () => setQuery(didYouMean);
+      } else if (mode === 'noarea') {
+        hint.textContent = 'לא נמצאו תוצאות ב' + area + ' – מוצגות תוצאות מאזורים אחרים';
+      } else if (mode === 'partial') {
+        hint.textContent = 'לא נמצא שירות שמתאים לכל המילים – מוצגות התאמות חלקיות, הטובות ביותר קודם';
+      }
+
+      const grid = $('servicesGrid');
+      if (!filtered.length) {
+        grid.innerHTML = '';
+        $('noResults').style.display = 'block';
+        $('noResultsText').textContent = results.length
+          ? 'יש ' + results.length + ' תוצאות לחיפוש, אבל הן מוסתרות בגלל הסינון. נסי "ניקוי כל הסינונים".'
+          : 'נסי מילה אחרת או קצרה יותר, או בחרי אחת מההצעות למעלה';
+        syncUrl();
+        return;
+      }
+      $('noResults').style.display = 'none';
+
+      const cards = [], byKey = {};
+      filtered.forEach(r => {
+        const k = r.s._pkey;
+        if (!byKey[k]) { byKey[k] = { s: r.s, items: [] }; cards.push(byKey[k]); }
+        byKey[k].items.push(r);
+      });
+      if (anyFilter) $('serviceCount').textContent += ' אצל ' + cards.length + ' נשים';
+      else $('serviceCount').textContent = 'מציג ' + services.length + ' שירותים של ' + cards.length + ' נשים';
+
+      grid.innerHTML = cards.map(({ s, items }) => {
+        const allHits = new Set(items.flatMap(r => r.hits));
+        const image = items.flatMap(r => r.s.images || []).find(u => !/\.(mp4|mov|webm)(\?|$)/i.test(u)) || '';
+        const phone = s.provider_phone ? s.provider_phone.replace(/\D/g, '') : '';
+        const whatsappPhone = phone.startsWith('0') ? '972' + phone.substring(1) : phone.startsWith('972') ? phone : '972' + phone;
+        const initials = s.provider_name ? s.provider_name.split(' ').filter(Boolean).map(n => n[0]).join('').substring(0, 2) : '👤';
+        const total = PROVIDER_COUNT[s._pkey];
+        const shownDesc = new Set();
+        const svcHtml = items.map(({ s: v, hits }) => {
+          const hitSet = new Set(hits);
+          const descHit = hitSet.size && words(v.description).some(w => hitSet.has(w));
+          const d = (v.description || '').trim();
+          const showDesc = d && !shownDesc.has(d);
+          shownDesc.add(d);
+          return `
+            <div class="svc">
+              <h3 class="service-title">${highlight(v.title, hitSet)}</h3>
+              ${showDesc ? `<p class="service-description${descHit ? ' open' : ''}">${highlight(v.description, hitSet)}</p>` : ''}
+              <div class="service-meta">
+                ${v.category ? `<span class="badge badge-category">${highlight(v.category, hitSet)}</span>` : ''}
+                ${v.price ? `<span class="badge badge-price">${esc(v.price)}</span>` : ''}
+                ${v.type === 'gift' ? `<span class="badge badge-price">מתנה</span>` : v.type === 'barter' ? `<span class="badge badge-price">בארטר</span>` : ''}
+                ${v.is_holiday ? `<span class="badge badge-holiday">${esc(v.holiday_type || 'חג')}</span>` : ''}
+              </div>
+            </div>`;
+        }).join('');
+        const area = s.geographic_area || s.provider_city;
+        return `
+        <div class="service-card">
+          ${image ? `<img src="${esc(image)}" class="service-image" alt="${esc(s.provider_name || s.title)}" loading="lazy" onerror="this.style.display='none'">` : ''}
+          <div class="service-content">
+            <div class="provider top">
+              <div class="provider-avatar">${esc(initials)}</div>
+              <div class="provider-info">
+                <div class="provider-name">${highlight(s.provider_name || 'ללא שם', allHits)}</div>
+                <div class="provider-city">${highlight(area, allHits)}${items.length > 1 ? ' · ' + items.length + ' שירותים' : ''}</div>
+              </div>
+            </div>
+            ${svcHtml}
+            ${total > items.length && s.provider_name ? `<button type="button" class="link-btn more-btn" data-name="${esc(s.provider_name)}">לכל ${total} השירותים שלה</button>` : ''}
+            <div class="contact-buttons">
+              ${s.provider_phone ? `<a href="https://wa.me/${whatsappPhone}" target="_blank" class="contact-btn btn-whatsapp">וואטסאפ</a>` : ''}
+              ${s.provider_phone ? `<a href="tel:${esc(s.provider_phone)}" class="contact-btn btn-phone">טלפון</a>` : ''}
+              ${s.provider_email ? `<a href="mailto:${esc(s.provider_email)}" class="contact-btn btn-email">מייל</a>` : ''}
+              ${s.provider_instagram ? `<a href="${/^https?:/.test(s.provider_instagram) ? esc(s.provider_instagram) : 'https://instagram.com/' + esc(s.provider_instagram)}" target="_blank" class="contact-btn btn-instagram">אינסטגרם</a>` : ''}
+            </div>
+          </div>
+        </div>
+        `;
+      }).join('');
+      grid.querySelectorAll('.more-btn').forEach(b => b.onclick = () => { Object.assign(state, { group: 'all', region: '', area: '', type: '' }); setQuery(b.dataset.name); });
+      syncUrl();
+    }
+
+    // ---------- Suggestions (autocomplete) ----------
+    const PHRASES = [];
+    const seenPhrases = new Set();
+    function addPhrase(text, kind, apply) {
+      const key = kind + '|' + norm(text);
+      if (!text || !norm(text) || seenPhrases.has(key)) return;
+      seenPhrases.add(key);
+      const ws = words(text);
+      PHRASES.push({ text, kind, apply, ws, lws: ws.map(loose) });
+    }
+    Object.keys(areaCounts).forEach(a => addPhrase(a, 'אזור', () => { state.region = regionOf(a); state.area = REGIONS[state.region] ? a : ''; setQuery(''); }));
+    [...Object.keys(REGIONS), ONLINE].forEach(r => addPhrase(r, 'אזור', () => { state.region = r; state.area = ''; setQuery(''); }));
+    CATEGORY_GROUPS.forEach(g => addPhrase(g.name, 'תחום', () => { state.group = g.name; setQuery(''); }));
+    services.forEach(s => addPhrase(s.category, 'קטגוריה', () => setQuery(s.category)));
+    services.forEach(s => addPhrase(s.provider_name, 'נותנת שירות', () => setQuery(s.provider_name)));
+    services.forEach(s => addPhrase(s.title.trim(), 'שירות', () => setQuery(s.title.trim())));
+    const KIND_ORDER = { 'אזור': 0, 'תחום': 1, 'קטגוריה': 2, 'נותנת שירות': 3, 'שירות': 4 };
+
+    let activeSuggestion = -1, currentSuggestions = [];
+    function phraseMatches(p, tokens) {
+      return tokens.every(t => {
+        const lt = loose(t);
+        return p.ws.some((w, i) => w.startsWith(t) || (lt.length >= 2 && p.lws[i].startsWith(lt)) || (t.length >= 3 && w.includes(t)));
+      });
+    }
+    function showSuggestions() {
+      const tokens = parseQuery(input.value);
+      if (!tokens.length) return hideSuggestions();
+      const byKind = {};
+      currentSuggestions = PHRASES.filter(p => phraseMatches(p, tokens))
+        .sort((a, b) => KIND_ORDER[a.kind] - KIND_ORDER[b.kind])
+        .filter(p => (byKind[p.kind] = (byKind[p.kind] || 0) + 1) <= 3)
+        .slice(0, 8);
+      if (!currentSuggestions.length) return hideSuggestions();
+      activeSuggestion = -1;
+      const hitSet = new Set();
+      currentSuggestions.forEach(p => p.ws.forEach(w => { if (tokens.some(t => w.startsWith(t) || loose(w).startsWith(loose(t)))) hitSet.add(w); }));
+      suggestBox.innerHTML = currentSuggestions.map((p, i) =>
+        `<li role="option" data-i="${i}"><span>${highlight(p.text, hitSet)}</span><span class="kind">${p.kind}</span></li>`).join('');
+      suggestBox.hidden = false;
+    }
+    function hideSuggestions() { suggestBox.hidden = true; activeSuggestion = -1; }
+    function moveSuggestion(d) {
+      const items = suggestBox.querySelectorAll('li');
+      if (!items.length) return;
+      activeSuggestion = (activeSuggestion + d + items.length) % items.length;
+      items.forEach((li, i) => li.classList.toggle('active', i === activeSuggestion));
+    }
+    suggestBox.addEventListener('mousedown', e => {
+      const li = e.target.closest('li');
+      if (li) { e.preventDefault(); currentSuggestions[+li.dataset.i].apply(); }
+    });
+
+    let debounce;
+    input.addEventListener('input', () => {
+      clearBtn.hidden = !input.value;
+      showSuggestions();
+      clearTimeout(debounce);
+      debounce = setTimeout(() => { state.query = input.value; render(); }, 150);
+    });
+    input.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); suggestBox.hidden ? showSuggestions() : moveSuggestion(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); moveSuggestion(-1); }
+      else if (e.key === 'Enter') {
+        if (!suggestBox.hidden && activeSuggestion >= 0) currentSuggestions[activeSuggestion].apply();
+        else { hideSuggestions(); state.query = input.value; render(); }
+      } else if (e.key === 'Escape') {
+        if (!suggestBox.hidden) hideSuggestions(); else setQuery('');
+      }
+    });
+    input.addEventListener('blur', () => setTimeout(hideSuggestions, 100));
+    document.addEventListener('keydown', e => {
+      if (e.key === '/' && document.activeElement !== input && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) {
+        e.preventDefault(); input.focus();
+      }
+    });
+
+    // ---------- Shareable search link (#q=...) ----------
+    function syncUrl() {
+      const p = new URLSearchParams();
+      if (state.query.trim()) p.set('q', state.query.trim());
+      if (state.group !== 'all') p.set('cat', state.group);
+      if (state.region) p.set('region', state.region);
+      if (state.area) p.set('area', state.area);
+      if (state.type) p.set('type', state.type);
+      const h = p.toString();
+      try { history.replaceState(null, '', h ? '#' + h : location.pathname + location.search); } catch (e) {}
+    }
+    (function readUrl() {
+      const p = new URLSearchParams(location.hash.slice(1));
+      state.query = p.get('q') || '';
+      state.group = groupButtons[p.get('cat')] ? p.get('cat') : 'all';
+      state.area = areaCounts[p.get('area')] ? p.get('area') : '';
+      state.region = regionButtons[p.get('region')] ? p.get('region') : (state.area ? regionOf(state.area) : '');
+      if (!REGIONS[state.region]) state.area = '';
+      state.type = TYPE_LABELS[p.get('type')] ? p.get('type') : '';
+      input.value = state.query;
+    })();
+
+    render();
+  </script>
+
+  <footer style="margin-top: 60px; padding: 40px 20px; background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.5);">
+    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+      <h3 style="color: #8b5cf6; font-size: 1.3rem; margin-bottom: 20px; font-weight: 600;">גילוי נאות</h3>
+      <p style="color: #64748b; font-size: 0.95rem; line-height: 1.8; margin-bottom: 15px;">
+        חברות יקרות,
+      </p>
+      <p style="color: #64748b; font-size: 0.95rem; line-height: 1.8; margin-bottom: 15px;">
+        הדף הזה הוא יוזמה של תלמידות שהוקם ונעשה עבור תלמידות שהכירו במסגרת הקבוצה 'נשים טוות', על מנת לאפשר פלטפורמה של חיבור בין החברות ברמה המקצועית למען חברות טובה ופרנסה טובה לכל הנוגעים בדבר.
+      </p>
+      <p style="color: #64748b; font-size: 0.95rem; line-height: 1.8; margin-bottom: 15px;">
+        אין לנו שום אחריות ישירה או עקיפה על השירותים הניתנים, וההשתתפות במיזם וכל התקשרות היא באחריות המשתמש בלבד.
+      </p>
+      <p style="color: #64748b; font-size: 0.95rem; line-height: 1.8;">
+        המיזם הוא מיזם חברתי וללא מטרת רווח ואין לו קשר ישיר או עקיף לעמותת 'האמת והשלום' או לכבוד הרב אריק נווה בשום צורה או עניין.
+      </p>
+    </div>
+  </footer>
+  <a class="join-fab" href="https://wa.me/972549463770?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%94%D7%95%D7%A1%D7%99%D7%A3%2F%D7%9C%D7%A2%D7%93%D7%9B%D7%9F%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%91%D7%9E%D7%90%D7%92%D7%A8%20%D7%9B%D7%9C%D7%99%D7%9D%20%D7%A9%D7%9C%D7%95%D7%91%D7%99%D7%9D" target="_blank" rel="noopener" title="שלחי הודעה בוואטסאפ כדי להוסיף את עצמך או לעדכן פרטים"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.1-1.2l-.4-.2z"/></svg><span>הוסיפי את עצמך / עדכון פרטים</span></a>
+</body>
+</html>
