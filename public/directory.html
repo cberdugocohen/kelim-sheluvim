@@ -777,7 +777,8 @@
     function detectArea(tokens) {
       for (const ap of AREA_PHRASES) {
         for (let i = 0; i + ap.ws.length <= tokens.length; i++) {
-          const ok = ap.ws.every((w, k) => tokens[i + k] === w || (k === 0 && PREFIXES.some(p => tokens[i] === p + w)));
+          const isCity = !REGIONS[ap.area] && ap.area !== ONLINE;
+          const ok = ap.ws.every((w, k) => tokens[i + k] === w || (k === 0 && PREFIXES.some(p => !(isCity && p.endsWith('ה')) && tokens[i] === p + w)));
           if (ok) return { area: ap.area, ws: ap.ws, rest: tokens.slice(0, i).concat(tokens.slice(i + ap.ws.length)) };
         }
       }
