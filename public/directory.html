@@ -711,7 +711,7 @@
         provider: s.provider_name,
         area: [s.geographic_area, s.provider_city].join(' '),
         description: s.description,
-        extra: [s.price, s._types.map(k => TYPE_WORDS[k]).join(' '), s.is_holiday ? 'חג ' + (s.holiday_type || '') : ''].join(' ')
+        extra: [s.price, s._types.map(k => TYPE_WORDS[k]).join(' ')].join(' ')
       };
       s._fields = Object.entries(fields).map(([k, v]) => {
         const ws = words(v);
@@ -752,15 +752,15 @@
     }
 
     function tokenScore(s, cands, fuzzy) {
-      let best = 0;
+      let best = 0, literal = false;
       const hits = [];
       s._fields.forEach(f => f.words.forEach((w, i) => {
         cands.forEach(c => {
           const lv = matchLevel(c, w, f.loose[i], fuzzy);
-          if (lv) { best = Math.max(best, lv * c.f * f.w); hits.push(w); }
+          if (lv) { best = Math.max(best, lv * c.f * f.w); hits.push(w); if (c.strong && lv >= 0.7) literal = true; }
         });
       }));
-      return { score: best, hits };
+      return { score: best, hits, literal };
     }
 
     function closestWord(t) {
@@ -785,6 +785,7 @@
       return null;
     }
 
+    const LITERAL_BONUS = 20;
     function searchServices(tokens) {
       const none = { mode: 'all', didYouMean: null, area: null };
       if (!tokens.length) return { ...none, results: services.map(s => ({ s, score: 0, hits: [] })) };
@@ -802,7 +803,7 @@
         const hits = [];
         expanded.forEach((c, k) => {
           const r = tokenScore(s, c, fuzzyFlags[k]);
-          if (r.score) { score += r.score; matched++; hits.push(...r.hits); }
+          if (r.score) { score += r.score + (r.literal ? LITERAL_BONUS : 0); matched++; hits.push(...r.hits); }
         });
         if (textTokens.length > 1 && s._titleNorm.includes(textTokens.join(' '))) score += 15;
         return { s, score, matched, hits };
@@ -1025,7 +1026,6 @@
                 ${v._types.filter(k => k !== 'paid').map(k => `<span class="badge badge-gift">${k === 'gift' ? 'מתנה' : 'בארטר'}</span>`).join('')}
                 ${benefit ? `<span class="badge badge-benefit">${esc(benefit)}</span>` : ''}
                 ${v.price ? `<span class="badge badge-price">${esc(v.price)}</span>` : ''}
-                ${v.is_holiday ? `<span class="badge badge-holiday">${esc(v.holiday_type || 'חג')}</span>` : ''}
                 ${v.category && v.category !== 'אחר' ? `<span class="badge badge-category">${highlight(v.category, hitSet)}</span>` : ''}
               </div>
             </div>`;
