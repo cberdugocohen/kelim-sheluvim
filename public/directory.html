@@ -751,13 +751,14 @@
       return 0;
     }
 
+    const LITERAL_LEVELS = new Set([1, 0.85, 0.7]);
     function tokenScore(s, cands, fuzzy) {
       let best = 0, literal = false;
       const hits = [];
       s._fields.forEach(f => f.words.forEach((w, i) => {
         cands.forEach(c => {
           const lv = matchLevel(c, w, f.loose[i], fuzzy);
-          if (lv) { best = Math.max(best, lv * c.f * f.w); hits.push(w); if (c.strong && lv >= 0.7) literal = true; }
+          if (lv) { best = Math.max(best, lv * c.f * f.w); hits.push(w); if (c.strong && LITERAL_LEVELS.has(lv)) literal = true; }
         });
       }));
       return { score: best, hits, literal };
